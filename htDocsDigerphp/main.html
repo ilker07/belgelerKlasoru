@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="page02hidden.css">
+    <title>ASAC v1.0</title>
+  </head>
+
+  <header>
+    <div title="header" class="header_line">
+
+    <video loop class="mirdev_anim" src="videos/mirdev.mp4" muted autoplay ></video>
+<!-- HEADER BUTTONS ON THE TOP RIGHT OF THE SCREEN !-->
+    <input  class="connect_id" type="number" name="ID" value="" placeholder="ID">
+    <button class="connect_button" id="connect_button" type="button" name="connect" onclick="toggle_connect()">Connect</button>
+    <button class="connect_button" type="button" name="get_data">Get Data</button>
+    <button class="connect_button" type="button" name="send_data">Send Data</button>
+    <button class="select_Turkish" type="button" name="Turkish"></button>
+    <button class="select_English" type="button" name="English"></button>
+<!-- ##################################################### !-->
+
+    </div>
+  </header>
+
+  <body>
+
+<!-- MAIN MENU BUTTONS ON THE MIDDLE RIGHT OF THE SCREEN !-->
+
+<!-- THE 2 BUTTONS OF ONLINE MEASUREMENT MENU !-->
+<div title="Measure Buttons" class="measure_buttons" id="measure_buttons">
+
+  <div title="measure Menu" class="menu_inner_row" id="measure_buttons_main">
+    <button class="measure_button" type="button" name="measure_graph_button" onclick="shut_all();open_measure()">
+      <div title="graph_menu_icon" class="menu_button_icons"> <!-- DIVIDER TO KEEP THE BUTTON ICON AND BUTTON TEXT IN ORDER !-->
+        <img class="icon_measure" src="images/graphicon.png" alt=""><p class="menu_text">Graph</p>
+      </div>
+    </button>
+
+    <button class="measure_button" type="button" name="measure_panel_button" onclick="shut_all();open_measure();open_panel()">
+      <div title="panel_menu_icon" class="menu_button_icons"> <!-- DIVIDER TO KEEP THE BUTTON ICON AND BUTTON TEXT IN ORDER !-->
+        <img class="icon_measure" src="images/panelicon.png" alt=""><p class="menu_text">Panel</p>
+      </div>
+    </button>
+  </div>
+</div>
+
+    <div class="main_div" id="mainMenu_div">
+
+ <!-- ONLINE MEASURE BUTTON TO BRING UP THE ONLINE MEASUREMENT MENU !-->
+      <button class="menu_button" id="onl_mea_button"  style="display: none;" type="button" name="online_measure_button" onclick="open_measure()">
+        <div class="menu_button_icons"> <!-- DIVIDER TO KEEP THE BUTTON ICON AND BUTTON TEXT IN ORDER !-->
+          <img class="icon"  src="images/measure2.png" alt=""><p class="menu_text">Online Measure</p>
+        </div>
+      </button>
+
+ <!-- SETUP BUTTON TO BRING UP THE SETUP MENU !-->
+      <button class="menu_button" type="button" name="setup_button" onclick="shut_all();open_setup();open_digital()">
+        <div class="menu_button_icons"> <!-- DIVIDER TO KEEP THE BUTTON ICON AND BUTTON TEXT IN ORDER !-->
+         <img class="icon" src="images/setup.png" alt=""><p class="menu_text">Ladder Setup</p>
+        </div>
+      </button>
+
+ <!-- ACCOUNT BUTTON TO GO TO THE ACCOUNT SETTINGS PAGE !-->
+      <button class="menu_button" type="button" name="account_button" onclick="shut_all();open_account()">
+        <div class="menu_button_icons"> <!-- DIVIDER TO KEEP THE BUTTON ICON AND BUTTON TEXT IN ORDER !-->
+         <img class="icon" src="images/account.png" alt=""><p class="menu_text">Account</p>
+        </div>
+      </button>
+
+ <!-- INFO BUTTON TO BRING UP THE INFO PAGE !-->
+      <button class="menu_button" type="button" name="info_button" onclick="shut_all();open_info()">
+        <div class="menu_button_icons"> <!-- DIVIDER TO KEEP THE BUTTON ICON AND BUTTON TEXT IN ORDER !-->
+          <img class="icon" src="images/info.png" alt=""><p class="menu_text">Info</p>
+        </div>
+      </button>
+
+    </div>
+
+<!-- ##################################################### !-->
+
+<div class="inFrame_buttons">
+
+<!-- SETUP MENU BUTTONS ON THE MIDDLE TOP OF THE SCREEN (ONLY APPEARS IF SETUP BUTTON IS PRESSED)!-->
+    <div class="setup_area" id="setupMenu_div">
+      <button active class="setup_button" type="button" name="digital_menu_button" onclick="shut_all();open_setup();open_digital()">
+        <div class="menu_button_icons"> <!-- DIVIDER TO KEEP THE BUTTON ICON AND BUTTON TEXT IN ORDER !-->
+          <img class="icon" src="images/digitalinput.png" alt=""><p class="menu_text">Digital Inputs</p>
+        </div>
+      </button>
+
+      <button class="setup_button" type="button" name="analog_menu_button" onclick="shut_all();open_setup();open_analog()">
+        <div class="menu_button_icons"> <!-- DIVIDER TO KEEP THE BUTTON ICON AND BUTTON TEXT IN ORDER !-->
+         <img class="icon" src="images/measure2.png" alt=""><p class="menu_text">Analog Inputs</p>
+        </div>
+      </button>
+
+      <button class="setup_button" type="button" name="modbus_menu_button" onclick="shut_all();open_setup();open_modbus()">
+        <div class="menu_button_icons"> <!-- DIVIDER TO KEEP THE BUTTON ICON AND BUTTON TEXT IN ORDER !-->
+         <img class="icon" src="images/modbus.png" alt=""><p class="menu_text">Modbus Read</p>
+        </div>
+      </button>
+
+      <button class="setup_button" type="button" name="RTC_menu_button" onclick="shut_all();open_setup();open_RTC()">
+        <div class="menu_button_icons"> <!-- DIVIDER TO KEEP THE BUTTON ICON AND BUTTON TEXT IN ORDER !-->
+          <img class="icon" src="images/rtc.png" alt=""><p class="menu_text">RTC Control</p>
+        </div>
+      </button>
+
+    </div>
+
+
+<!--
+ SUB MENUS OF DIGITAL INPUT
+>>>
+>>>
+ !-->
+    <div class="digital_input_cont" id="digital_input_div">
+      <div id="digital_input_box" class="digital_input">
+        <h2 name="sos">Digital Input I.00</h2>
+        <div class="digital_input_lower">
+          <select class="digital_dropbox" name="inputs">
+            <option value="" disabled selected>>>Digital Inputs</option>
+            <option value="">1</option>
+            <option value="">2</option>
+            <option value="">3</option>
+          </select>
+
+          <div class="menu_inner_column">
+            <input class="highlow_button" type="radio" name="highlow" value="high"> <span class="highlow_text" >High</span><br>
+            <input class="highlow_button" type="radio" name="highlow" value="low"> <span class="highlow_text" >Low</span>
+
+          </div>
+
+          <div class="input_area">
+            <span class="rate_icon">sn</span>
+            <input class="digital_input_field" type="number" name="" value="" placeholder="Timer">
+          </div>
+
+          <div class="highlow_area">
+            <select class="digital_dropbox" name="inputs">
+              <option value="" disabled selected>>>Digital Out</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+            </select>
+
+            <select class="digital_dropbox" name="inputs">
+              <option value="" disabled selected>>>Analog Out</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+
+            </select>
+          </div>
+
+          <div class="input_area_outlate">
+            <span class="rate_icon">sn</span>
+            <input class="digital_input_field" type="number" name="" value="" placeholder="Output Late Timer">
+          </div>
+
+          <div class="input_area">
+            <span class="rate_icon">%</span>
+            <input class="digital_input_field" type="text" name="" value="" placeholder="Rate">
+          </div>
+
+
+          <div >
+           
+            <button class="digital_dropbox" type="submit" name="gon1" value="gon1" >Submit</button>
+          </div>
+
+
+        </div>
+      </div>
+      </div>
+<!--
+END OF THE SUB MENUS OF DIGITAL INPUT
+>>>
+>>>
+!-->
+
+<!--
+ SUB MENUS OF ANALOG INPUT
+>>>
+>>>
+ !-->
+    <div class="analog_input_cont" id="analog_input_div">
+      <div id="analog_input_box" class="analog_input">
+        <h2 name="sos">Analog Input I.00</h2>
+        <div class="digital_input_lower">
+
+          <div class="analog_menu_inner_column">
+            <select class="digital_dropbox" name="inputs">
+              <option value="" disabled selected>>>Analog Inputs</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+            </select>
+
+            <input class="math_add" type="number" name="" value="" placeholder="Math. Add">
+            <input class="math_add" type="number" name="" value="" placeholder="Math. Add">
+            <input class="math_add" type="number" name="" value="" placeholder="Math. Add">
+            <input class="math_add" type="number" name="" value="" placeholder="Math. Add">
+
+          </div>
+
+          <div class="analog_menu_inner_column">
+              <span class="adc_display" class="online_data">Target Data ADC</span>
+              <input class="target_data" type="number" name="" value="" placeholder="&nbsp &nbsp Target Data"><br>
+              <span class="online_data">Online Data</span>
+              <span class="adc_display" class="online_data">Online Data ADC</span>
+          </div>
+
+          <div class="analog_menu_inner_column">
+              <input class="input_text_field" type="text" name="" value=""><br>
+              <input class="input_text_field" type="text" name="" value=""><br>
+              <input class="input_text_field" type="text" name="" value=""><br>
+              <input class="input_text_field" type="text" name="" value="">
+          </div>
+
+          <div class="analog_menu_inner_column">
+            <input class="Eq_button" type="radio" name="Eq_select" value="="> <span class="Eq_text" >=</span><br>
+            <input class="Eq_button" type="radio" name="Eq_select" value="<"> <span class="Eq_text" ><</span><br>
+            <input class="Eq_button" type="radio" name="Eq_select" value=">"> <span class="Eq_text" >></span>
+          </div>
+
+
+          <div class="analog_menu_inner_column2">
+            <div class="menu_inner_row">
+              <span class="rate_icon">sn</span>
+              <input class="digital_input_field" type="number" name="" value="" placeholder="Timer">
+            </div>
+          </div>
+
+          <div class="analog_menu_inner_column">
+            <select class="digital_dropbox" name="inputs">
+              <option value="" disabled selected>>>Digital Out</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+            </select>
+
+            <select class="digital_dropbox" name="inputs">
+              <option value="" disabled selected>>>Analog Out</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+            </select>
+          </div>
+
+
+          <div class="analog_menu_inner_column2">
+            <div class="menu_inner_row">
+            <span class="rate_icon">sn</span>
+            <input class="digital_input_field" type="number" name="" value="" placeholder="Output Late Timer">
+            </div>
+          </div>
+
+          <div class="analog_menu_inner_column">
+            <input class="target_data" type="number" name="minmax_select" placeholder="min">
+            <input class="target_data" type="number" name="minmax_select" placeholder="max">
+            <div class="menu_inner_row">
+              <span class="rate_icon">%</span>
+              <input class="digital_input_field" type="text" name="" value="" placeholder="Rate">
+            </div>
+          </div>
+        </div>
+
+      </div>
+      </div>
+<!--
+END OF THE SUB MENUS OF ANALOG INPUT
+>>>
+>>>
+!-->
+
+<!--
+ SUB MENUS OF MODBUS READ
+>>>
+>>>
+ !-->
+    <div class="analog_input_cont" id="modbus_input_div">
+      <div id="modbus_input_box" class="analog_input">
+        <h2 name="sos">Modbus Read I.00</h2>
+        <div class="digital_input_lower">
+
+          <div class="modbus_menu_inner_column">
+            <select class="digital_dropbox" name="inputs">
+              <option value="" disabled selected>Modbus Read Slave Address</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+            </select>
+          </div>
+
+          <div class="modbus_menu_inner_column">
+            <select class="digital_dropbox" name="inputs">
+              <option value="" disabled selected>>>Boundrate</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+            </select>
+          </div>
+
+            <div class="modbus_menu_inner_column">
+              <select class="digital_dropbox" name="inputs">
+                <option value="" disabled selected>>>Data Bits</option>
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+              </select>
+            </div>
+
+            <div class="modbus_menu_inner_column">
+              <select class="digital_dropbox" name="inputs">
+                <option value="" disabled selected>>>Parity</option>
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+              </select>
+            </div>
+
+            <div class="modbus_menu_inner_column">
+              <select class="digital_dropbox" name="inputs">
+                <option value="" disabled selected>>>Stop Bit</option>
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+              </select>
+            </div>
+
+            <div class="modbus_menu_inner_column">
+              <input class="read_register" type="text" name="" value="" placeholder="Read Register">
+            </div>
+
+          <div class="modbus_menu_inner_column">
+            <select class="digital_dropbox" name="inputs">
+              <option value="" disabled selected>>>Digital Out</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+            </select>
+
+            <select class="digital_dropbox" name="inputs">
+              <option value="" disabled selected>>>Analog Out</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+      </div>
+<!--
+END OF THE SUB MENUS OF MODBUS
+>>>
+>>>
+!-->
+
+<!--
+ SUB MENUS OF RTC
+>>>
+>>>
+ !-->
+    <div class="analog_input_cont" id="rtc_input_div">
+      <div id="rtc_input_box" class="analog_input">
+        <h2 name="sos">RTC Control I.00</h2>
+        <div class="digital_input_lower">
+
+          <div class="modbus_menu_inner_column">
+            <input class="input_date_field" type="time" name="" value="">
+
+            <select class="digital_dropbox" name="inputs">
+              <option value="" disabled selected>Every Day/Week</option>
+              <option value="">Every Day</option>
+              <option value="">Every Week</option>
+            </select>
+          </div>
+
+          <div class="modbus_menu_inner_column">
+            <input class="input_date_field" type="time" name="" value="">
+          </div>
+
+          <div class="modbus_menu_inner_column">
+            <select class="digital_dropbox" name="RTC_digital_out">
+              <option value="" disabled selected>>>Digital Out</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+            </select>
+          </div>
+
+          <div class="modbus_menu_inner_column">
+            <div class="menu_inner_row">
+              <span class="rate_icon">%</span>
+              <input class="digital_input_field" type="text" name="RTC_rate_input" value="" placeholder="Rate">
+            </div>
+          </div>
+
+          <div class="modbus_menu_inner_column">
+              <select class="digital_dropbox" name="RTC_digital_output_select">
+                <option value="" disabled selected>>>Digital Out</option>
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+              </select>
+
+            <select class="digital_dropbox" name="RTC_analog_output_select">
+              <option value="" disabled selected>>>Analog Out</option>
+              <option value="">1</option>
+              <option value="">2</option>
+              <option value="">3</option>
+            </select>
+          </div>
+
+          <div class="modbus_menu_inner_column">
+            <span class="clock_display">TIME OF DAY</span>
+              <select class="digital_dropbox" name="timezone_select">
+                <option value="" disabled selected>Timezones</option>
+                <option value="">Timezone: 1</option>
+                <option value="">Timezone: 2</option>
+                <option value="">Timezone: 3</option>
+              </select>
+          </div>
+
+        </div>
+
+      </div>
+      </div>
+<!--
+END OF THE SUB MENUS OF RTC
+>>>
+>>>
+!-->
+
+<!-- INFO PAGE !-->
+<div class="infobox" id="infobox">
+    <p>Info bölümünde bulunacak yazıları temsil eden kısa paragraf...</p>
+</div>
+<!-- END OF INFO PAGE !-->
+
+<!--ACCOUNT PAGE !-->
+  <div class="box_main" id="accountpage">
+
+    <div class="username_box">
+      <h1>ASAC v1.0</h1>
+      <input class="account_input" type="text" name="Username_New" value="" placeholder="New Username">
+      <input class="account_input" type="text" name="Username_Retype" value="" placeholder="Retype Username">
+      <button class="account_button" type="button" name="Username_Button">Change Username</button>
+    </div>
+
+    <div class="password_box">
+      <input class="account_input" type="password" name="Password_New" value="" placeholder="New Password">
+      <input class="account_input" type="password" name="Password_Retype" value="" placeholder="Retype Password">
+      <button class="account_button" type="button" name="Password_Button">Change Password</button>
+    </div>
+</div>
+<!-- END OF ACCOUNT PAGE !-->
+
+<!-- PANEL PAGE !-->
+  <div class="panel_main" id="panel_main">
+    <div class="panel_inner_row" id="panel_inner_row1">
+
+      <div class="panel_element" id="panel_element">
+        <input class="panel_title" type="text" name="panel1_Title" value="">
+        <span class="panel_display_value">999.99</span>
+        <input class="panel_lower" type="text" name="panel1_lower" value="">
+        <span class="panel_timeofday">TIME OF DAY</span>
+        <div class="panel_footer">
+            <select class="panel_sensor_select" name="sensor_select1">
+                <option value="">1</option>
+                <option value="">2</option>
+                <option value="">3</option>
+            </select>
+            <input class="panel_button" type="checkbox" name="activate_button" onclick="toggle_panel_button(this)"><span id="active_button_text" class="panel_checkmark">Inactive</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel_inner_row" id="panel_inner_row2">
+
+    </div>
+    <div class="panel_inner_row" id="panel_inner_row3">
+
+    </div>
+    <div class="panel_inner_row" id="panel_inner_row4">
+
+    </div>
+  </div>
+<!-- END OF PANEL PAGE !-->
+
+    </div>
+</div>
+
+<!-- ##################################################### !-->
+
+</div>
+
+  </body>
+  <div class="footer">
+<!-- Yusuf Kızılkaya 2021 !-->
+    <p class="clock"><img src="images/clock.png" alt="">19:23:10</p>
+  </div>
+
+<!-- JAVASCRIPT !-->
+  <script type="text/javascript">
+/////////////////////////////////////
+////////////BEGINNING OF/////////////
+//////////// THE SCRIPT /////////////
+/////////////////////////////////////
+  shut_all()
+
+//
+//FOR LOOPS ARE USED TO DUPLICATE THE SETUP MENU ELEMENTS...
+//
+  for (var i = 0; i < 16; i++){ //FOR LOOP TO ADD ALL 16 DIGITAL INPUT AREAS
+    var elmnt = document.getElementById('digital_input_box');
+    var cln = elmnt.cloneNode(true);
+    //duplicate the radio button fields "highlow" for all 16 input areas
+    cln.children[1].children[1].children[0].name = 'highlow'.concat(String(i));
+    cln.children[1].children[1].children[3].name = 'highlow'.concat(String(i));
+
+    cln.children[0].innerHTML = 'Digital Input I.'.concat(("00"+String(i+1)).slice(-2));
+    var digital_div = document.getElementById('digital_input_div');
+    digital_div.appendChild(cln);
+  }
+
+  for (var i = 0; i < 16; i++){ //FOR LOOP TO ADD ALL 16 ANALOG INPUT AREAS
+    var elmnt2 = document.getElementById('analog_input_box');
+    var cln2 = elmnt2.cloneNode(true);
+
+    //duplicate the radio button fields "eq_select" for all 16 input areas
+    cln2.children[1].children[3].children[0].name = 'Eq_select'.concat(String(i));
+    cln2.children[1].children[3].children[3].name = 'Eq_select'.concat(String(i));
+    cln2.children[1].children[3].children[6].name = 'Eq_select'.concat(String(i));
+
+    //duplicate the radio button fields "minmax_select" for all 16 input areas
+    cln2.children[1].children[7].children[0].name = 'minmax_select'.concat(String(i));
+    cln2.children[1].children[7].children[2].name = 'minmax_select'.concat(String(i));
+
+    cln2.children[0].innerHTML = 'Analog Input I.'.concat(("00"+String(i+1)).slice(-2));
+    var analog_div = document.getElementById('analog_input_div');
+    analog_div.appendChild(cln2);
+  }
+
+  for (var i = 0; i < 16; i++){ //FOR LOOP TO ADD ALL 16 MODBUS READ AREAS
+    var elmnt3 = document.getElementById('modbus_input_box');
+    var cln3 = elmnt3.cloneNode(true);
+    cln3.children[0].innerHTML = 'Modbus Read I.'.concat(("00"+String(i+1)).slice(-2));
+    var modbus_div = document.getElementById('modbus_input_div');
+    modbus_div.appendChild(cln3);
+  }
+
+  for (var i = 0; i < 16; i++){ //FOR LOOP TO ADD ALL 16 RTC CONTROL AREAS
+    var elmnt4 = document.getElementById('rtc_input_box');
+    var cln4 = elmnt4.cloneNode(true);
+    cln4.children[0].innerHTML = 'RTC Control I.'.concat(("00"+String(i+1)).slice(-2));
+    var RTC_div = document.getElementById('rtc_input_div');
+    RTC_div.appendChild(cln4);
+  }
+
+  for (var i = 0; i < 3; i++){
+    var elmnt5 = document.getElementById('panel_element');
+    var cln5 = elmnt5.cloneNode(true);
+    var panel_div = document.getElementById('panel_inner_row1');
+    cln5.children[4].children[2].id = 'active_button_text'.concat(String(i+1));
+    panel_div.appendChild(cln5);
+  }
+
+  for (var i = 0; i < 4; i++){
+    var elmnt6 = document.getElementById('panel_element');
+    var cln6 = elmnt6.cloneNode(true);
+    var panel_div = document.getElementById('panel_inner_row2');
+    panel_div.appendChild(cln6);
+  }
+
+  for (var i = 0; i < 4; i++){
+    var elmnt7 = document.getElementById('panel_element');
+    var cln7 = elmnt7.cloneNode(true);
+    var panel_div = document.getElementById('panel_inner_row3');
+    panel_div.appendChild(cln7);
+  }
+
+  for (var i = 0; i < 4; i++){
+    var elmnt8 = document.getElementById('panel_element');
+    var cln8 = elmnt8.cloneNode(true);
+    var panel_div = document.getElementById('panel_inner_row4');
+    panel_div.appendChild(cln8);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+//FUNCTION TO HIDE ALL OPEN WINDOWS
+function shut_all(){
+  shut_measure();
+  shut_setup();
+  shut_account();
+  shut_info();
+
+  shut_digital();
+  shut_analog();
+  shut_modbus();
+  shut_RTC();
+
+  shut_panel();
+}
+
+//OPEN AND CLOSE FUNCTIONS FOR SETUP MENU
+function open_setup(){
+  var setupButtons = document.getElementById('setupMenu_div')
+  setupButtons.style.display = "flex";
+}
+
+function shut_setup(){
+  var setupButtons = document.getElementById('setupMenu_div')
+  setupButtons.style.display = "none";
+}
+
+//OPEN AND CLOSE FUNCTIONS FOR DIGITAL WINDOW
+function open_digital(){
+  var digitalboxes = document.getElementById('digital_input_div');
+  digitalboxes.style.display = "block";
+
+  var setup_buttons = document.getElementById('setupMenu_div').children;
+  for(var i = 0; i < 3 ; i++ ){
+    setup_buttons[i].className = 'setup_button';
+  }
+  setup_buttons[0].className = 'active setup_button';
+}
+
+function shut_digital(){
+  var digitalboxes = document.getElementById('digital_input_div');
+  digitalboxes.style.display = "none";
+
+  var setup_buttons = document.getElementById('setupMenu_div').children;
+  setup_buttons[0].className = 'setup_button';
+}
+
+//OPEN AND CLOSE FUNCTIONS FOR ANALOG WINDOW
+function open_analog(){
+  var digitalboxes = document.getElementById('analog_input_div');
+  digitalboxes.style.display = "block";
+}
+
+function shut_analog(){
+  var digitalboxes = document.getElementById('analog_input_div');
+  digitalboxes.style.display = "none";
+}
+
+//OPEN AND CLOSE FUNCTIONS FOR MODBUS WINDOW
+function open_modbus(){
+  var digitalboxes = document.getElementById('modbus_input_div');
+  digitalboxes.style.display = "block";
+}
+
+function shut_modbus(){
+  var digitalboxes = document.getElementById('modbus_input_div');
+  digitalboxes.style.display = "none";
+}
+
+//OPEN AND CLOSE FUNCTIONS FOR RTC WINDOW
+function open_RTC(){
+  var digitalboxes = document.getElementById('rtc_input_div');
+  digitalboxes.style.display = "block";
+}
+
+function shut_RTC(){
+  var digitalboxes = document.getElementById('rtc_input_div');
+  digitalboxes.style.display = "none";
+}
+
+//OPEN AND CLOSE FUNCTIONS FOR ONLINE MEASURE BUTTONS
+function open_measure(){
+  var digitalboxes = document.getElementById('measure_buttons');
+  digitalboxes.style.display = "flex";
+}
+
+function shut_measure(){
+  var digitalboxes = document.getElementById('measure_buttons');
+  digitalboxes.style.display = "none";
+}
+
+//OPEN AND CLOSE FUNCTIONS FOR ONLINE MEASURE BUTTONS
+function open_info(){
+  var digitalboxes = document.getElementById('infobox');
+  digitalboxes.style.display = "flex";
+}
+
+function shut_info(){
+  var digitalboxes = document.getElementById('infobox');
+  digitalboxes.style.display = "none";
+}
+
+function open_account(){
+  var digitalboxes = document.getElementById('accountpage');
+  digitalboxes.style.display = "block";
+}
+
+function shut_account(){
+  var digitalboxes = document.getElementById('accountpage');
+  digitalboxes.style.display = "none";
+}
+
+function open_panel(){
+  var digitalboxes = document.getElementById('panel_main');
+  digitalboxes.style.display = "block";
+}
+
+function shut_panel(){
+  var digitalboxes = document.getElementById('panel_main');
+  digitalboxes.style.display = "none";
+}
+
+function toggle_checkmark(checkmark){
+  if (checkmark.style.display == "block"){
+    checkmark.style.display = "none";
+  }
+  else{
+    checkmark.style.display = "block";
+  }
+}
+
+
+function toggle_connect(){
+
+  document.getElementById("onl_mea_button").style.display="block";
+  /*
+  if (document.getElementById('connect_button').innerHTML == "Connect"){
+    document.getElementById('connect_button').innerHTML = "Connected";
+    document.getElementById('connect_button').className = "active_connect_button";
+  }
+  else{
+    document.getElementById('connect_button').innerHTML = "Connect";
+    document.getElementById('connect_button').className = "connect_button";
+  }
+  */
+}
+
+function toggle_panel_button(element){
+    if (element.nextSibling.innerHTML == "Inactive"){
+      element.nextSibling.innerHTML = "Active";
+    }else{
+      element.nextSibling.innerHTML = "Inactive";
+    }
+  }
+
+//SELECT BETWEEN MAIN MENU BUTTONS RADIO BOX STYLE
+//
+//
+
+  var mainMenu = document.getElementById('mainMenu_div');
+  var mainButtons = mainMenu.getElementsByClassName('menu_button');
+
+  for (var i = 0; i < mainButtons.length; i++) {
+    mainButtons[i].addEventListener("click", function() {
+      var current = document.getElementsByClassName("active");
+
+      // If there's no active class
+      if (current.length > 0) {
+        current[0].className = current[0].className.replace(" active", "");
+      }
+
+      // Add the active class to the current/clicked button
+      this.className += " active";
+    });
+  }
+
+//
+//
+//################################################
+
+//SELECT BETWEEN SETUP BUTTONS
+//
+//
+  var digitalHL = document.getElementById('setupMenu_div');
+  var HLButtons = digitalHL.getElementsByClassName('setup_button');
+
+  for (var i = 0; i < HLButtons.length; i++) {
+    HLButtons[i].addEventListener("click", function() {
+      var currentHL = document.getElementsByClassName("active_setup");
+
+      // If there's no active class
+      if (currentHL.length > 0) {
+        currentHL[0].className = currentHL[0].className.replace(" active_setup", "");
+      }
+
+      // Add the active class to the current/clicked button
+      this.className += " active_setup";
+    });
+  }
+//
+//
+//################################################
+
+//SELECT BETWEEN ONLINE MEASURE BUTTONS
+//
+//
+  var onlineM = document.getElementById('measure_buttons_main');
+  var OMButtons = onlineM.getElementsByClassName('measure_button');
+
+  for (var i = 0; i < OMButtons.length; i++) {
+    OMButtons[i].addEventListener("click", function() {
+      var currentOM = document.getElementsByClassName("active_measure");
+
+      // If there's no active class
+      if (currentOM.length > 0) {
+        currentOM[0].className = currentOM[0].className.replace(" active_measure", "");
+      }
+
+      // Add the active class to the current/clicked button
+      this.className += " active_measure";
+    });
+  }
+//
+//
+//################################################
+
+  </script>
+<!-- ####################### !-->
+
+</html>

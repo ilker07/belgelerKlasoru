@@ -1,0 +1,41 @@
+#login img{
+	margin: 10px 0;
+  }
+  #login .center {
+	text-align: center;
+  }
+  
+  #login .login {
+	max-width: 300px;
+	height: 400px;
+	margin: 20px auto;
+  }
+  
+  #login .login-form{
+	padding:50px 25px;
+	padding-right: 25px;
+  }
+
+  #merkez{
+	  
+	display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  height: auto;
+  }
+#geriButon{
+    
+    /*background-image: url(back.jpg);  16px x 16px */
+    color:white;
+    background-repeat: no-repeat;  
+    background-position: 0px 0px; 
+    border: none;           /* assuming we don't want any borders */
+    cursor: pointer;        /* make the cursor like hovering over an <a> element */
+    height:30px;           /* make this the size of your image */
+    width:50px;
+    margin-left:200px;
+    padding-left:10px;
+    vertical-align: middle; /* align the text vertically centered */
+}
+
