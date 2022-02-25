@@ -1,0 +1,51 @@
+
+RTOS vTaskStartScheduler() fonksiyonu İDLE TASK ADINDA BOŞTA KALMA GÖREVİ OLUŞTURUR.
+
+
+2 görev olsun A görevinden Byi çağırmak için xTaskNotify() kullanılır Görev Anın içinde.
+
+xTaskNotify() ilk parametre fonksiyonu görev b nin ismi.(xtaskCreate son parametre).
+xTaskNotify() ikinci parametre value
+xTaskNotify() ucuncu parametre  ne yapılacğı (no action,increment,vs...)
+
+xTaskNotifyWait() fonksiyonu 1.parametre örnek 0x03 ise BİLDİRİM DEĞERİNİN 0 .ve 2.bitler temizlenir girişte.
+xTaskNotifyWait() fonksiyonu 2.parametre örnek 0x03 ise BİLDİRİM DEĞERİNİN  0 .ve 2.bitler temizlenir çıkışta.
+xTaskNotifyWait() fonksiyonu 3.parametre gönderilecek değer.
+xTaskNotifyWait() fonksiyonu 4.parametre süre.
+       
+Görev A içinde
+xTaskNotify(GorevB_id,0x00,eIncrement);
+
+GörevB içinde
+xTaskNotifyWait(0,0,&value,portMAXDELAY)==pdTRUE
+value değeri görev A dan gelen değer.
+
+vtaskDelay ile görev bloklanır.
+vTaskSuspend() ie bir görev askıya alınır.Başka bir görevle vTaskResume() kulla
+nılarak askıdan alınır.
+
+IdleHook boşta kalma görevi.vTaskDelay çağrıldğında idlehook makrosu=1 ise o fonksiyon tetiklenir.o fonksiyonda__WFI(); kullanarak güç tassaarufu.
+
+Bolum 36den devam.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

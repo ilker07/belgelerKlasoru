@@ -1,0 +1,90 @@
+#include <16F877A.h>
+#use delay(crystal=8000000)
+ 
+#INT_EXT
+void ext_isr(void)
+{
+   clear_interrupt(INT_EXT);       // Clear external interrupt flag bit
+   output_toggle(PIN_C0);
+}
+void main()
+{
+   output_low(PIN_C0);
+   ext_int_edge(H_TO_L);           // External interrupt edge from high to low
+   clear_interrupt(INT_EXT);       // Clear external interrupt flag bit
+   enable_interrupts(INT_EXT);     // Enable external interrupt
+   enable_interrupts(GLOBAL);      // Enable global interrupts
+   while(TRUE) ; // Endless loop
+}
+
+TCP/IP Notları.
+
+1.A bilgisayarı B nin IP adresine sahip ama MAC adresine sahip değilse ARP ile IP  adresini==>MAC adresine çevirir.
+2.IP adresini bilen A bilgisayarı ARP ile "IP sini bildiğim bilgisayarın MAC adresi nedir" şeklinde bir mesaj yayınlar.Ağdaki bütün bilgisayarlar bunu alır.IP si uymayan mesajı çöpe atar.Uyan bilgisayar MAC adresini döner.
+3.DNS ve WINS. Bu iki ayrı seçenek iki ayrı bilgisayar adını IP adresine çeviriyor.
+4. Host adına karşılık olarak da “muhasebe.altindam.com.tr” adını verebiliriz. Host ismindeki ilk parametre (“muhasebe”) bir Internet domain’indeki bilgisayarın ismidir. Host isminin geri kalanı ise o bilgisayarın bulunduğu Internet domain’ini tanımlar (altindam.com.tr).
+5.Üstteki sitenin NETBIOS adı MUHASEBE olsun.NetBIOS ==> IP işini WINS dir. Host ==> IP inini DNS dir.
+6.DNS hizmeti 53 nolu portu, HTTP hizmeti 80 nolu portu, FTP hizmeti ise 21 nolu portu kullanırlar. 
+7.A sınıfı adreslerde ağ adresi ilk oktet ile belirlenir. Geri kalan üç oktet ise o ağdaki bir bilgisayarı gösterir.
+  B sınıfı adreslerde ağ adresi ilk iki oktet ile belirlenir. Geri kalan iki oktet o ağdaki bir bilgisayarı gösterir. 
+  C sınıfı adreslerde ağ adresi ilk üç oktet ile belirlenir. Geri kalan tek oktet o ağdaki bilgisayarı gösterir.
+  
+  İlk oktet 0 ile 126 arasında ise o adres bir A sınıfı adresidir. 
+  İlk oktet 128 ile 191 arasında ise o adres bir B sınıfı adresidir. 
+  İlk oktet 192 ile 223 arasında ise o adres bir C sınıfı adresidir. 
+
+  127.0.0.1 adresi kendi adresimizi gösterir
+
+8. PC A:195.134.67.200  PC B: 195.134.67.56  
+
+ SUBNET :255.255.255.0    => A İLE SUBNET ADRESLERİ LOGİC VE İŞLEMİ==>195.134.67.0
+ SUBNET :255.255.255.0    => B İLE SUBNET ADRESLERİ LOGİC VE İŞLEMİ==>195.134.67.0
+ 
+ İKİ DEĞER EŞİT .O zaman bu iki PC aynı ağdadır.
+
+9. A şehri  ==>  B şehri ==> C şehri 
+
+ Her şehrin Ip Adresi + 2 tane bağlantı noktası =5 ağ adresi.
+
+Örnek Adres:195.156.89.0  (Son oktet değişmeli.) 2 üzeri 3 -2 =6 (5 ağ adresi için bu yüzden n=3)
+
+n=3 için
+
+0 0 0 
+0 0 1
+0 1 0 
+0 1 1 
+1 0 0 
+1 0 1
+1 1 0 
+1 1 1 
+(000 ve 111 olamaz.)
+
+Adresler:
+Başlangıç Adresi                      Bitiş  
+195.156.89.001 00001 (195.156.89.33)  195.156.89.001 11110  (195.156.89.62) 
+195.156.89.010 00001 (195.156.89.65)  195.156.89.010 11110  (195.156.89.94)   
+195.156.89.011 00001 (195.156.89.97)  195.156.89.011 11110  (195.156.89.126) 
+195.156.89.100 00001 (195.156.89.129)  195.156.89.100 11110  (195.156.89.158) 
+195.156.89.101 00001 (195.156.89.161)  195.156.89.101 11110  (195.156.89.190)   
+195.156.89.110 00001 (195.156.89.193)  195.156.89.110 11110  (195.156.89.222) 
+
+Bunlar için Subnet 255.255.255.111 00000 (ilk 3 bitin 1 olmasının sebebi n=3)
+
+
+85.sayfadan devam
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,728 @@
+
+/*
+#include <18F67K22.h>
+#device ADC=12 // 12 bit ADC kullanilacak
+#fuses NOBROWNOUT, NOWDT,PROTECT // Brownout ve WDT kapali
+#use delay (internal=8M)
+//#use rs232 (baud=9600, xmit=pin_c6, rcv=pin_c7,stream=BLU,errors) //Rs232 ayarlari
+//#pragma use rs232 (baud=9600,parity=n,xmit=PIN_G1,rcv=PIN_G2,bits=8,stop=1,errors,stream=mesafe_Sensor)
+#pragma use rs232 (baud=9600,xmit=PIN_G1,rcv=PIN_G2,stream=mesafe_Sensor,errors)
+#include<math.h>
+
+
+
+
+#define MODBUS_TYPE MODBUS_TYPE_SLAVE
+#define MODBUS_SERIAL_TYPE MODBUS_RTU     //use MODBUS_ASCII for ASCII mode
+#define MODBUS_SERIAL_RX_BUFFER_SIZE 64
+#define MODBUS_SERIAL_BAUD 9600
+#define MODBUS_SERIAL_INT_SOURCE MODBUS_INT_RDA
+
+
+#define MODBUS_SERIAL_TX_PIN PIN_C6   // Data transmit pin
+#define MODBUS_SERIAL_RX_PIN PIN_C7   // Data receive pin
+#define MODBUS_SERIAL_ENABLE_PIN   PIN_C5   // Controls DE pin for RS485
+#define MODBUS_SERIAL_RX_ENABLE    0   // Controls RE pin for RS485
+
+
+#include <modbus.c>
+
+#define MODBUS_ADDRESS 0x17    //F6 Slave1 için. 17 Slave 2
+
+
+
+
+   
+unsigned int16 mesafe=0; 
+
+
+int zamanSayaci=0;
+float deger;
+
+unsigned int16 besinci_kanal;
+
+unsigned int16 toplam;
+
+ //unsigned int16 x=260;
+
+#define okuma_sayisi 5
+
+unsigned int16 mesafeToplami=0;
+float degerToplam;
+byte indata=0;byte buffer[5]; int sayac=0;
+unsigned int8 i=1;
+//int16 hold_regs[] = {0x0000,0x0000,0x0000,0x0000};
+
+
+
+#INT_RDA2
+ void rda_interrupt()
+ {
+   disable_interrupts(int_rda2);
+   //output_low(pin_b5);
+ 
+   indata=getc(mesafe_Sensor);
+   buffer[sayac]=indata;
+   sayac++;
+  
+   
+   
+   if(buffer[sayac-4]==0xFF)    
+    {
+       byte yuksek;
+       byte dusuk;
+       byte kontrol;
+       byte tekrar;
+      
+       
+       
+       yuksek=buffer[sayac-3];
+       dusuk=buffer[sayac-2];
+       kontrol=buffer[sayac-1];
+       
+       mesafeToplami=yuksek+dusuk+0xFF;//Kontrol
+       tekrar = mesafeToplami & 0xFF;
+      
+       
+       
+       
+       if(tekrar==kontrol)
+       {
+         mesafe=256*yuksek;
+         mesafe+=dusuk;
+         mesafe /=10;
+         //hold_regs[0]=mesafe;
+         //hold_regs[0]=x;
+         //x++;
+       }
+       
+       sayac=0;
+    }
+   
+  
+     //hold_regs[0]=mesafe;
+   //output_high(pin_b5);
+ 
+   enable_interrupts(int_rda2);
+ }
+
+
+
+#int_timer0
+void zaman_kesme()  
+ {
+ 
+  zamanSayaci++;
+  if(zamanSayaci<70)
+  {
+  output_high(pin_b5);
+  output_high(pin_b4);
+  }
+  else if(zamanSayaci<100)
+  {
+  output_low(pin_b5);
+  output_low(pin_b4);
+  }
+  if(zamanSayaci==100)
+    zamanSayaci=0;
+      
+ 
+   set_timer0(6);//1 ms lik kesme.
+ }
+ 
+
+
+
+void main()
+{
+   
+ 
+   
+   
+   //setup_timer_0(T0_INTERNAL|T0_DIV_8 | T0_8_BIT);
+   //set_timer0(6);
+   
+   
+  
+  
+  
+
+   set_tris_b(0x00);                       //B portu cikis.
+   output_b(0x00);                         //B portu cikisi sifirlanir.
+   
+   
+   set_tris_a(0xFF);
+   set_tris_f(0xFF);
+   
+   setup_adc(adc_clock_div_32); // ADC birimi Fosc/32 aktif.
+   setup_adc_ports(sAN6|sAN7);
+   
+   modbus_init();
+   
+   
+   int16 hold_regs[] = {0x0000,0x0000,0x0000,0x0000};
+   output_low(pin_b5);
+  
+   
+   enable_interrupts(int_rda2);
+   //enable_interrupts(INT_TIMER0);
+   
+   enable_interrupts(GLOBAL);
+  
+   
+   
+   
+   
+   
+
+   
+    
+
+   while(TRUE) 
+   {
+      
+      
+          
+       
+         hold_regs[0]=mesafe;
+       
+       
+      
+          
+  
+      
+         
+        while(!modbus_kbhit());
+
+      delay_us(50);
+
+      
+      if((modbus_rx.address == MODBUS_ADDRESS) || modbus_rx.address == 0)
+      {
+         switch(modbus_rx.func)
+         {
+            
+            case FUNC_READ_HOLDING_REGISTERS:
+           
+               if(modbus_rx.data[0] || modbus_rx.data[2] ||
+                  modbus_rx.data[1] >= 8 || modbus_rx.data[3]+modbus_rx.data[1] > 8)
+                  modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_DATA_ADDRESS);
+               else
+               {
+                  if(modbus_rx.func == FUNC_READ_HOLDING_REGISTERS)
+                     modbus_read_holding_registers_rsp(MODBUS_ADDRESS,(modbus_rx.data[3]*2),hold_regs+modbus_rx.data[1]);
+                
+                  
+               }
+               break;
+            
+            
+           
+           
+            default:    
+               modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_FUNCTION);
+         }
+      }
+     
+     
+     
+     
+     
+      
+      
+   }
+}
+
+
+
+*/
+
+//hold 0 sicaklik
+//hold 1 referans
+//hold 2 uctaki 
+
+
+#include <18F67K22.h>
+#device ADC=12 // 12 bit ADC kullanilacak
+#fuses NOBROWNOUT, NOWDT,PROTECT // Brownout ve WDT kapali
+#use delay (internal=8M)
+
+#include<math.h>
+
+//#use fast_io(g)
+
+
+#define MODBUS_TYPE MODBUS_TYPE_SLAVE
+#define MODBUS_SERIAL_TYPE MODBUS_RTU     //use MODBUS_ASCII for ASCII mode
+#define MODBUS_SERIAL_RX_BUFFER_SIZE 64
+#define MODBUS_SERIAL_BAUD 9600
+#define MODBUS_SERIAL_INT_SOURCE MODBUS_INT_RDA
+
+
+#define MODBUS_SERIAL_TX_PIN PIN_C6   
+#define MODBUS_SERIAL_RX_PIN PIN_C7   
+#define MODBUS_SERIAL_ENABLE_PIN   PIN_C5   
+#define MODBUS_SERIAL_RX_ENABLE    0   
+
+
+#include <modbus.c>
+
+#define MODBUS_ADDRESS 0x17    
+
+int16 hold_regs[] = {0x0000,0x0000,0x0000,0x0000};
+unsigned int16 voltajiki=0,voltajBir=0,voltajSifir=0;
+unsigned int8 i=0;
+unsigned int16 kanalSifirToplamOkuma=0;
+unsigned int16 kanalBirToplamOkuma=0;
+unsigned int16 kanalIkiToplamOkuma=0;
+
+
+float deger;
+float degerToplam;
+
+#define okumaSayisi 20
+
+//#define tekrarlamaSayisi 10
+
+unsigned int8 pwmDeger=200; //4       60 icin 32 derece ;  120 icin 45 derece;
+unsigned int8 prescaler=254;//6
+unsigned int16 zamanSayaci=0;
+
+
+#int_timer0
+void zaman_kesme()  
+ {
+ 
+ 
+  //bes_sn_sayaci++;
+  zamanSayaci++;
+  if(zamanSayaci<70)
+  {
+  output_high(pin_b5);
+  output_high(pin_b4);
+ 
+  }
+  else if(zamanSayaci<100)
+  {
+  //output_low(pin_b5);
+  //output_low(pin_b4);
+  
+  }
+  if(zamanSayaci==100)
+    zamanSayaci=0;
+  
+ 
+   set_timer0(6);//1 ms lik kesme.
+ }
+
+unsigned int16 voltaj_olc(int8 kanal)
+{
+ unsigned int16 adcDeger;
+ float voltaj;
+ set_adc_channel(kanal); //kanal
+ delay_ms(5); //20 us
+ adcDeger=read_adc();
+ voltaj=(0.001201171875*adcDeger)*1000;  // B5v icin 0.001220703125   4.80:0.001171875
+ voltaj=(unsigned int16) voltaj;
+ return voltaj;
+ //sicaklik=(float)voltaj/10;
+ //hold_regs[1]=(unsigned int16)sicaklik;
+}
+
+void main()
+{
+   
+  
+   
+   setup_psp(PSP_DISABLED); 
+   setup_spi(SPI_SS_DISABLED);  
+   setup_wdt( WDT_OFF);
+   setup_adc(adc_clock_div_32); // ADC birimi Fosc/8 aktif.adc_clock_div_8 ,adc_clock_internal
+   //setup_adc_ports(sAN0|sAN1 |sAN2|sAN6 | sAN7);
+   setup_adc_ports(sAN6 | sAN7);
+   
+   delay_ms(100);
+
+  
+   setup_timer_0(T0_INTERNAL|T0_DIV_8 | T0_8_BIT);
+   set_timer0(6);
+   
+   set_tris_a(0xFF);
+   set_tris_f(0xFF);
+   
+   set_tris_b(0x00);
+   output_b(0x00);
+   modbus_init();
+  
+  
+   
+   /*
+   setup_ccp4(CCP_PWM);
+   setup_ccp5(CCP_PWM);  // 4* psclar*(6+1)*Tosc  ==> psclar bu ornekte 16
+   setup_timer_2(T2_DIV_BY_16,prescaler,1); //pwm 3 verdik.
+   
+   delay_ms(250);
+   
+   set_pwm4_duty(pwmDeger); //Kanal 0 .Bu sabitlemeli.
+   set_pwm5_duty(pwmDeger); //Kanal 1
+   */
+   
+   enable_interrupts(INT_TIMER0);
+   
+   enable_interrupts(GLOBAL);
+  
+  
+   
+   
+ 
+
+   while(TRUE)   //AN6 SENSOR  SİCAKLİK:7
+   {
+        
+        
+        for(i=0;i<okumaSayisi;i++)
+        
+        {
+        
+         /*
+         voltajSifir=voltaj_olc(0);
+         
+         
+         
+         if(voltajSifir>569)  //559
+          set_pwm4_duty(0);
+         if(voltajSifir<560)   //550
+          set_pwm4_duty(pwmDeger);
+          */
+          
+          
+         //delay_ms(10);
+         //voltajBir= voltaj_olc(1);  ///lM35!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         
+         
+          set_adc_channel(7);
+          delay_us(20);
+          deger=read_adc();
+                   //sicaklikADC +=deger;
+                   
+                   deger= (4096.0 / deger);
+                   deger -=1;
+                   deger = 10000.0  / deger;
+                   deger = deger / 10000.0 ; 
+                   deger = log(deger);
+                   deger /= 4450.0; 
+                   deger += 1.0 / (25+273.15); 
+                   deger = 1.0 / deger; 
+                   deger -= 273.15; 
+                   
+                   degerToplam +=deger;
+                   
+         
+         
+         
+         
+         
+         
+        
+         delay_ms(10);
+         
+          voltajiki= voltaj_olc(6);  //Cubuk   bURASİ   2!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         
+         /*
+          if(voltajiki>569)
+          set_pwm5_duty(0);
+         if(voltajiki<560)
+          set_pwm5_duty(pwmDeger);
+          */
+          
+         delay_ms(10);
+        
+        // kanalSifirToplamOkuma+=voltajSifir;
+         kanalBirToplamOkuma+=voltajBir;
+         kanalIkiToplamOkuma +=voltajiki;
+        
+        }
+        
+         
+        //kanalSifirToplamOkuma /=okumaSayisi;
+        kanalBirToplamOkuma   /=okumaSayisi;
+        kanalIkiToplamOkuma  /= okumaSayisi;
+        degerToplam=(float)degerToplam/okumaSayisi;
+        degerToplam=(unsigned int16)degerToplam;
+        
+         /*
+         if(kanalSifirToplamOkuma>559)  //709
+          set_pwm4_duty(0);
+         if(kanalSifirToplamOkuma<550)   //700
+          set_pwm4_duty(4);
+          
+          if(kanalIkiToplamOkuma>559)
+          set_pwm5_duty(0);
+         if(kanalIkiToplamOkuma<550)
+          set_pwm5_duty(4);
+          
+        
+        
+        hold_regs[0]=(unsigned int16)(kanalBirToplamOkuma); ///10
+        hold_regs[1]=(unsigned int16)kanalSifirToplamOkuma;
+        hold_regs[2]=(unsigned int16)kanalIkiToplamOkuma;
+          */
+          
+          
+        hold_regs[0]=(unsigned int16)kanalSifirToplamOkuma;  ///Sifir    eskide 
+        hold_regs[1]=(unsigned int16)degerToplam ;        //kanalBirToplamOkuma/10; ///10   ntc 
+        hold_regs[2]=(unsigned int16)kanalIkiToplamOkuma;    //Iki  eskide  kanalIkiToplamOkuma
+        
+        
+        
+        kanalSifirToplamOkuma=0;
+        kanalBirToplamOkuma=0;
+        kanalIkiToplamOkuma=0;
+        degerToplam=0;
+         
+         
+         
+         
+         
+         
+        while(!modbus_kbhit());
+
+      delay_us(50);
+
+      
+      if((modbus_rx.address == MODBUS_ADDRESS) || modbus_rx.address == 0)
+      {
+         switch(modbus_rx.func)
+         {
+            
+            case FUNC_READ_HOLDING_REGISTERS:
+           
+               if(modbus_rx.data[0] || modbus_rx.data[2] ||
+                  modbus_rx.data[1] >= 8 || modbus_rx.data[3]+modbus_rx.data[1] > 8)
+                  modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_DATA_ADDRESS);
+               else
+               {
+                  if(modbus_rx.func == FUNC_READ_HOLDING_REGISTERS)
+                     modbus_read_holding_registers_rsp(MODBUS_ADDRESS,(modbus_rx.data[3]*2),hold_regs+modbus_rx.data[1]);
+                
+                  
+               }
+               break;
+            
+            
+           
+           
+            default:    
+               modbus_exception_rsp(MODBUS_ADDRESS,modbus_rx.func,ILLEGAL_FUNCTION);
+         }
+      }
+     
+     
+     
+     
+     
+      
+      
+   }
+}
+
+ 
+
+ ********************************************************************************************************************
+
+
+#define F_CPU 16000000ul
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include <string.h>
+#include <stdio.h>
+#define UART_Rx_Boyut 64
+#define UART_Tx_Boyut 1024
+#define UART_Rx_Mask (UART_Rx_Boyut-1)
+#define UART_Tx_Mask (UART_Tx_Boyut-1)
+#define UART_Bos_On UCSR0B|=(1<<UDRIE0)
+#define UART_Bos_Off UCSR0B&=~(1<<UDRIE0)
+#define ROLE PORTB5
+#define ROLE_PORT PORTB
+#define ROLE_OUT DDRB|=(1<<ROLE)
+#define ROLE_HIGH ROLE_PORT|=(1<<ROLE)
+#define ROLE_LOW ROLE_PORT&=~(1<<ROLE)
+volatile uint8_t rx_bas=0,rx_son=0,tx_bas=0,tx_son=0;
+volatile uint8_t rx_ring[UART_Rx_Boyut];
+volatile uint8_t tx_ring[UART_Tx_Boyut];
+volatile uint8_t uaflag=0;
+uint8_t espflag=0;
+char veri[35], esp[30];
+char boyut [4];
+uint16_t dizi_boyut=0;
+char str1[]="<br><div><h1>LED YAK SONDUR</h1></div><br><div ><a href=\"?pin=on\"><button id='acButon'   style='background-color:green;width:100px ; height:75'>Ledi Yak</button></a><a href=\"?pin=off\"><button id='kapaButon' style='background-color:red;width:100;height:75'>Ledi Sondur</button></a></div>";
+char str2[]="<span style='font-size:70px;font-weight:bold;color:green;'>ACIK</span><script>document.getElementById('acButon').disabled = true;";
+char str3[]="<span style='font-size:70px;font-weight:bold;color:red;'>KAPALI</span>";
+uint8_t geldi=0;
+uint8_t temizlendi=0;
+void uart_basla(uint32_t baud);
+uint8_t uart_oku();
+void uart_gonder(uint8_t uData);
+void uart_dizi_gonder(const char*str);
+void uart_dizi_al(char*str);
+uint8_t uart_gelen();
+void mesaj_kontrol();
+ISR (USART_RX_vect){
+  uint8_t gelen;
+  gelen=UDR0;
+  if (gelen!='\n'){
+    rx_bas=(rx_bas+1) & UART_Rx_Mask;
+    rx_ring[rx_bas]=gelen;
+    }else{
+    uaflag=1;
+  }
+}
+ISR (USART_UDRE_vect){
+  tx_son=(tx_son+1)&UART_Tx_Mask;
+  UDR0=tx_ring[tx_son];
+  if (tx_son==tx_bas)
+  UART_Bos_Off;
+}
+int main(void){
+	ROLE_OUT;
+  uart_basla(115200);
+  uart_dizi_gonder("AT\r\n"); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  _delay_ms(500);
+  uart_dizi_al(veri);
+  if (strstr(veri,"OK")=='\0'){
+    do {
+      uart_dizi_gonder("AT\r\n");
+      _delay_ms(500);
+      uart_dizi_al(veri);
+    } while (strstr(veri,"OK")=='\0');
+  }
+  uart_dizi_gonder("AT+CWMODE=1\r\n");
+  _delay_ms(300);
+  uart_dizi_gonder("AT+CWJAP=\"""ILKER""\",\"""ilkeraykut07""\"\r\n");
+  _delay_ms(300);
+  uart_dizi_gonder("AT+CIPMUX=1\r\n");
+  _delay_ms(300);
+  uart_dizi_gonder("AT+CIPSERVER=1,80\r\n");
+  while (1){
+    
+    if (uaflag==1){
+      mesaj_kontrol();
+    }
+    if (espflag==1){
+      espflag=0;
+      dizi_boyut=strlen(str1);
+                
+      if (strstr(esp,"GET /?pin=on")!='\0'){
+        dizi_boyut+=strlen(str2);
+        sprintf(boyut,"%d",dizi_boyut);
+        uart_dizi_gonder("AT+CIPSEND=0");
+        uart_dizi_gonder(boyut);
+        uart_dizi_gonder("\r\n");
+        uart_dizi_gonder(str1);
+        uart_dizi_gonder(str2);
+        uart_dizi_gonder("\r\n");       
+        ROLE_HIGH;        
+        }else if (strstr(esp,"GET /?pin=off")!='\0'){
+        dizi_boyut+=strlen(str3);
+        sprintf(boyut,"%d",dizi_boyut);
+        uart_dizi_gonder("AT+CIPSEND=0");
+        uart_dizi_gonder(boyut);
+        uart_dizi_gonder("\r\n");
+        uart_dizi_gonder(str1);
+        uart_dizi_gonder(str3);
+        uart_dizi_gonder("\r\n");
+        ROLE_LOW;       
+      } else {       
+        sprintf(boyut,"%d",dizi_boyut);
+        uart_dizi_gonder("AT+CIPSEND=0");
+        uart_dizi_gonder(boyut);
+        uart_dizi_gonder("\r\n");
+        uart_dizi_gonder(str1);        
+        uart_dizi_gonder("\r\n");
+      }
+  
+    uart_dizi_gonder(esp);    
+    uart_dizi_gonder("AT+CIPCLOSE=0\r\n");
+    uart_dizi_gonder("AT+CWMODE=1\r\n");
+    uart_dizi_gonder("AT+CWJAP=\"""WifiAdi""\",\"""WifiŞifresi""\"\r\n");   
+  }
+}
+}
+//////////////// uart
+void uart_basla(uint32_t baud){
+	uint16_t baudRate=0;
+	baudRate=(F_CPU/baud/16)-1;
+	if (baud>=112500){
+		 baudRate=(F_CPU/baud/8)-1;
+		 UCSR0A|=(1<<U2X0);
+	}
+  UBRR0H=(baudRate>>8);
+  UBRR0L=baudRate;  
+  UCSR0B|=(1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0);
+  UCSR0C|=(1<<UCSZ01)|(1<<UCSZ00);
+  sei();
+}
+uint8_t uart_oku(){
+  rx_son=(rx_son+1) & UART_Rx_Mask;
+  return rx_ring[rx_son];
+}
+void uart_gonder(uint8_t uData){
+  tx_bas=(tx_bas+1)&UART_Tx_Mask;
+  while (tx_bas==tx_son);
+  tx_ring[tx_bas]=uData;
+  UART_Bos_On;
+}
+void uart_dizi_gonder(const char*str){
+  while(*str){
+    uart_gonder (*str++);
+  }
+}
+uint8_t uart_gelen(){
+  if (rx_son==rx_bas){
+    return 0;
+  }
+  return 1;
+}
+void uart_dizi_al(char*str){
+  uint8_t gdata=0;
+  uint8_t poz=0;
+  do
+  { gdata=uart_oku();
+    str[poz]=gdata;
+    poz++;
+  } while (!(rx_bas==rx_son));
+  uaflag=0;
+}
+void mesaj_kontrol(){
+  uart_dizi_al(veri);
+  if (strstr(veri,"IPD")!='\0'){
+    espflag=1;
+    
+    for (uint8_t i=0;i<30;i++){
+      esp[i]=veri[i];
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

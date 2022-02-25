@@ -1,0 +1,272 @@
+Note 3
+
+if(20<50<40)
+
+Bu koşulu sağlar.Çünkü ilk olarak 20<50 bunu yapar. Bunun sonucu 1 dir.Sonra 1<40 ==> Doğru.
+****************************************************************************
+Note 4:
+int x =(a,b) ==> b değerini atar..
+*************************************
+Note 5:
+(x>y)?x:y  ==> doğru ise ilk ifade yanlış ise ikinci ifade.
+
+Note 7 :
+long double ve double için scanfte %lf kullanılır.
+*****************************************************
+Note 8:
+printf("\"hello\"");
+********************************
+Note 9 :
+ x^=(1<<3); xor işlemi o bitler aynıysa sonuç 0 farklı ise 1.
+**************************************
+Note 10:
+int * ptrfunc(int *ptr)
+{
+  static int sonuc;
+  return &sonuc;  //Adres dönen fonksiyonlarda static nesne dönmesi faydalı.
+}
+**************************************
+Note 11:
+
+const int * ptr; ==> *ptr değiştirilemez.(Değeri.)
+int  * const ptr ;==>ptr değiştirilemez.(Adresi)
+******************************************
+Note 12:
+int a[10][20];
+int (*ptr)[20]=a;
+int *p1=(int *)a;
+*********************************************
+Note 13:
+char *p=strchr(stringDeger,'a');//Stringte a var mi?
+
+if(p !=NULL)
+print("indis %d",p-str+1);
+*************************************************
+Note 14:
+int sonuc=strcmp("ABC","abc");
+
+Sonuc negatif .İndis indis karsilastirir.a 97 A 65 Bu yüzden 2 . daha büyük.
+********************************************************
+Note 15:
+_itoa()
+********************************
+Note 16
+
+char *p[] ={"İlker","Mustafa","Aykut"};
+***************************
+
+//strcpy,strcat,strchr,strstr,strcmp bunlari yaz.
+
+//Dizi Boyu
+/* 
+    char name[]="ilker";  // size ı belirtmezsek ,size belirtirsek karakter sayısı kaç olursa olusn size değerini yazar.Strlen ile kaç karakter olduğunu yazar(Size dan bağımsız)
+    i=sizeof(name);
+    i=i-1;
+*/
+const char dizi3[4]={'a','b','c','\0'};//Pointer olarak da tanımlanabilir.
+const char dizi2[5]="Dizi";//Sadece böyle tanımlanabilir.Boyutu 1 fazla ver.
+const char *dizi[4]={"AT+HTTTPTERM","OK","AT//","AT=1"};//Sadece böyle tanımlanabilir.
+
+
+/*
+ 	char * cptr =mesaj;
+    	printf("Harf: %c\n",*cptr); //Harfi yazar.
+    	printf("Kelime:%s\n",cptr); //Bütün hepsini yazar.
+ 
+*/
+
+/*
+    char dizi[]="Dizi";
+    char *p[3]={"ilker","Mustafa","Aykut"};
+    char diger[]={'m','u','r','\0'};
+    
+    sizeof(diger)-1
+
+*/
+
+
+//strcpy(s1,s2);//s1 e s2 kopyalanır.
+//strcat(s1,s2);//s1e s2 eklenir.
+//strchr(s1,'k');//k harfi var mı?Yoksa NULL pointer .Varsa indeksi p-s1+1
+//strstr(s1,s2);//s2 s1 de var mı?
+//strcmp(s1,s2) //s1 büyükse 1,s2 büyükse -1 ,eşitse 0.Soldan başlayarak karakter karakter kıyaslar.
+
+//define str(s)   #s 
+//define birlestir(x,y) x##y  ==>ornek:int merhaba=20; ==> birlestir(mer,haba) ==>yazdırılırsa 20 sonucu.
+// yaz((const int*)&a); Type -Cast
+//int value=atoi(s1); //İlk non-digit karaktere kadar alır.
+//itoa ya da _itoa(sayi,str,10);
+//sprintf(str,"%d % f",deger1,deger2....);
+//int *ptr[3]={&a,&b,&c};
+
+//////// TYPEDEF STRUCT ////////////////////////////////////
+
+/*
+
+ typedef struct Point {
+	
+	//uint16_t x;
+	//uint8_t y;
+	char c;
+	char t;      char 1 kaplar 4 lük yer açılır diğer 3 ünü diğer 3 har yerleşir.(En büyük elemana göre double olsaydı açılan 8 lik)
+	char f;
+	char r;
+	char z;
+	int h;
+	// int a;
+	 int b;
+	 
+	}Point;
+*/
+
+//////// TYPEDEF STRUCT ////////////////////////////////////
+
+
+//// UNION /////////////////////////////////
+
+//union en büyük öğenin sze ofu.double int char varsa en yüksek olan olur diğerleri olmaz. sadece 1 i kullanılabilir.
+
+
+/*
+	typedef enum Notes {Sifir,Bir,Iki,Uc}Notes;
+        Notes deger;
+	deger=Sifir;
+*/
+
+//// UNION /////////////////////////////////
+
+
+/////////////  MALLOC    ///////////////////////////////////////
+/*
+  int *ptr=(int *)malloc(20);
+    if(ptr=NULL)
+    {
+	 printf("Basarisiz");
+	}
+	
+    else
+    {
+    	printf("Basarili");
+	}
+
+    free(ptr);
+
+*/
+
+///////////////////////////////////          MALLOC    ///////////////////////////////////////
+
+
+
+/////////////////////////////////////////// REALLOC /////////////////////////////////////////////
+
+/*
+
+int *ip, id,fark,j;
+	int deger1=100;
+	int deger2=97;
+
+    ip = (int *) malloc(deger1*sizeof(int));
+    
+    if(ip ==NULL)
+     exit(1);
+
+    for (id=0; id<deger1; id++) {
+         *(ip+id) = id+1;
+         printf("%p adresindeki deger: %d\n", (ip+id), *(ip+id));
+    }
+     
+    
+    ip = (int *)realloc(ip, deger2* sizeof(int));
+    fark=deger1-deger2;
+    
+    
+    for (j=0;j<fark;j++)
+      *(ip+j+deger2)='\0';
+    
+	  
+    printf("Degistirilmis bellek degerleri:\n");
+
+    for (id=0;id<deger1;id++) { 
+        
+         printf("%p adresindeki deger: %d\n", (ip+id), *(ip+id));
+    }
+
+    free(ip);
+*/
+
+//////////////////////////////////////////   REALLOC   /////////////////////////////////////////////
+
+///multi array
+
+
+int a[][3]={1,2,3,4,5,6}; ilk boşluk 2 olur a[2][3] 1.satır 1 2 3 2.satır 4 5 6
+
+int (*ptr)[3]=a; ilk satıra işaret eder.
+
+(*ptr)[1]=2;
+ptr++; ikinci satırı işaret.
+ 
+
+///multi array
+
+///// ///////////////////////////////////////  VOID POINTER   ///////////////////////////////////////
+
+
+/*
+   Her türden nesnenin adresini tutabilir.Örnek int x=10;char a='a'  void *ptr =&x;  ptr=&b de olabilir .Yani önce int sonra char tutabilir.
+   
+     char y='a';
+	
+	 void * ptr=&y;
+	 
+	 ptr=sayiDizisi;
+	 
+	 printf("Pointer ile Dizi\n");
+	
+     for (i=0;i<5;i++)
+	 printf("%d\n",*((int *)ptr+i)); 
+
+
+*/
+
+
+///// ///////////////////////////////////////  VOID POINTER   ///////////////////////////////////////
+
+
+//memset(str,'a',10) ==> Strinig ilk 10 tanesini unlem yapti. memset(intDizisi,0,10*sizeof(int))
+/*	
+char str[]="İlker Mustafa Aykut";
+char *p=memchr(str+3,'M',4); //Stringin e harfinden itibaren (e dahil) 4 karakterde M harfini arar.
+	
+*/
+
+////// Fonksiyon Pointerları//////
+
+//void(*fptr)(int,double) =&fonksiyon ==> void==>Fonksiyonun geri dönüş.(int,double)==>Fonksiyon parametreleri.
+
+//typdef void(*fptr)(int,double); fptr f1; f1(x,y)==>Bu şekilde nesnesi. f1(x,y)==>Bu şekilde çağrılabilir.
+
+////// Fonksiyon Pointerları//////
+
+
+/////strtok/////////
+
+char str[]="Veni vidi vici.Bir kez daha.";
+  
+  char *string_ptr;
+
+  string_ptr=strtok(str,". "); //Nokta ve bosluğa göre ayir.
+  
+  
+  while(string_ptr != NULL)
+  {
+  	
+  	 printf("%s\n",string_ptr);
+  	 string_ptr=strtok(NULL,". ");//Nokta ve bosluğa göre ayir.
+  }
+///////////strtok //////
+
+
+
+
+

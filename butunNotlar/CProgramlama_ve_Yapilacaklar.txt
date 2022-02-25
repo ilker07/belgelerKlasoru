@@ -1,0 +1,200 @@
+
+STM32 BLUETOOTH YAZILIM GÜNCELLEME
+1.Master bluetooth USB-TTL ile (PC ye)(tx-rx,rx-tx)
+2.Slave  bluetooh (STM32 ye)
+3.Slave bluetooth ve usb ttl önce bağlanacak.
+4.Slave power kablosu(5v) takılmadan önce sağdaki siyah noktaya basılı tutarken gücü ver.
+5.Arduino seri portunda 
+6.AT+UART=9600,1,2
+7.AT+ROLE=0(Slave modu.)
+8.AT+ADDR?  (Dönen sonucu kopyala : bunları , yap.)
+9.AT+RESET
+10.Slave i sök.Masteri tak(4.adımın aynısı)
+11.AT+UART=9600,1,2
+12.AT+ROLE=1
+13.AT+BIND=Dönen sonucu
+14.AT+RESET
+12.stm stmflasher (get software)
+13.Stm32yi bootloader moduna al.(Sarısını yer değiş.)
+14.Yeni kodu derle hex i al.
+15.İndirilen programda brate :9600 parity:even echo disabled.
+16.Nexte bas.
+17.Board Seç.
+18.Download to Device seç.hexi koy.
+19.STM32 bootloader modundan çık.
+
+
+*****************************************
+esp32 1.0.4 ü kur.
+
+Taskstackwatermarker  ==>RTOS  size.
+
+
+Meraklı mühendis:https://www.youtube.com/watch?v=qkML5l_z_RQ (Blynk Esp)
+Meraklı mühendis:https://www.youtube.com/watch?v=KKtqbMTr7Dw&t=0s (Blynk)
+
+
+hc05 pc:Bluetooth cihazlarını yönet.Diğer btooh seçenekleri.COM Bağlantı noktasından giden Com port bizim port.
+
+
+https://www.youtube.com/watch?v=wSSTSGYk-m0&t=3s  //ethernet modülü
+thingspeak.com->apps->thingshttp->newthinghttp-> sitenin urli ve copy xpath
+
+
+OTA:https://github.com/Seelenkind/ESP-8266-OTA/wiki/ESP-01---Wemos-D1---NodeMCU-OTA-HTTP-get-firmware-Update?fbclid=IwAR3nMxiHrfohV9Mp97hTMi7-gpcLIfYIAicAh7b3c1RmqcBWZtN5nNNFdf4
+pic OTA firmware update
+
+subpriorty aynı interruptlar arası ADC-ADC gibi
+preemption farklı interruptlar arası.
+
+
+
+bootloader :Tüm projeler yapılacak.
+git ve github:not defteri ve diğer projeler kopyala.
+Rtos: Derslere devam.
+MQTT:.....
+HTTP (TCP veya UDP): espden devam.
+Soket :Tekrar et.
+ov7670 veya webcam projesi
+esp,ethernet,gsm,gprs projesi.
+SD KART ve OLED Ekran kullanarak resimleri göster.
+
+SD KART:Stm32 Gömülü yazılım tasarımı:Ders 23,24
+Sanal Port:Stm32 Gömülü yazılım tasarımı:Ders 16
+NRF:Stm32 Gömülü yazılım tasarımı:Ders 30
+
+  <meta http-equiv="refresh" content="5">
+
+fehmi uyar(php), (eddie amaya Bootloder ve OTA.)  mucit pilot(esp) ,controllers tech
+Alp Electronics,YigidOS,Cereyancı Adam,lrt,evde elektronik(Malzeme icin.)
+
+
+SPI, I2C, UART, CANBUS, USB, TCP/IP ,UDP,DSP,Modbus, MBus, Ethernet,IEC 62056-21,
+Bluetooth, WiFi ve RF RS232, RS485,Database,Gsm,gps,RFID,Blynk,bulut uygulamaları(thingsboard),KNX, DALI protokolü, TLS
+
+
+*****************ALINACAK MALZEMELER *******************************************
+
+
+
+Direnc.net:DRF1262G(STM32 KURSUNA BAK ORADAKİNİ AL.),ads1115,lojik analizör,hm-10,ojik Gerilim Seviye Dönüştürücü (3.3 V-5 V) - Logic Level Converter
+
+Daha Sonra alınacaklar:güç kaynağı,msp430,xbee,INA219,NRF
+
+
+
+*****************ALINACAK MALZEMELER *******************************************
+
+*********Keil proje oluşturma ve Ayarları********************
+
+1.Project ==>New Uvision project.
+2.D: klasöründe stmF4projeleri klasörü altında yeni projenin klasör adını oluştur.Sonra projenin adı ve kaydet.
+3.kartı seç.pack installer arm cmsis ,keil arm compiler install et.(1 kere.)
+4.cmsis dsp ve core startup.
+5.source group sağ tık new existing. c file.
+6.options for target 8 mhz.
+7.c c++ bolumunde include paths.
+8.utilities use debug tiki kaldır.
+
+*********Keil proje oluşturma ve Ayarları********************
+
+
+*********Keil Kod Yükleme ********************************
+Reset Butonuna Basılı Tut.
+Keil den Programlama düğmesine bastıktan hemen sonra reseti bırak.
+
+*********Keil Kod Yükleme ********************************
+
+
+
+*******************
+#include <18F452.h>
+#device ADC=10
+
+#fuse CPD
+
+#FUSES OSCSEN                  //Oscillator switching is enabled
+#FUSES NOPUT                    //No Power Up Timer
+#FUSES NOBROWNOUT              //No brownout reset
+#FUSES BORV20                  //Brownout reset at 2.0V
+#FUSES STVREN                  //Stack full/underflow will cause reset
+#FUSES NOLVP                    //No low voltage prgming, B3(PIC16) or B5(PIC18) used for I/O
+#FUSES NOPROTECT                //Code not protected from reading
+#FUSES NOCPB                    //No Boot Block code protection
+#FUSES NOCPD                    //No EE protection
+#FUSES NOWRT                    //Program memory not write protected
+#FUSES NOWRTC                  //Configuration registers not write protected
+#FUSES NOWRTB                  //Boot block not write protected
+#FUSES NOWRTD                  //Data EEPROM not write protected
+#FUSES NOEBTR                  //Memory not protected from table reads
+#FUSES NOEBTRB                  //Boot block not protected from table reads
+
+#use delay(clock=40MHz,crystal=10MHz)
+*******************
+
+
+Sensörler 
+Adım 3 :interrupt ile kullan.
+Adım 4 :Diğer özellikler ile kullan.
+Adım 5:İkili timer,interrupt uartta disable ırq enable ırq
+Adım 6:Priortiyler
+Adım 7:7 sensör+Uart+Prioriytler+Zamanlayıcılar+Adc.
+
+*******************************
+Projeler
+esp8266:Sensor bilgisi yolla(html sayfasına),php ile.(python esp)
+gps:crc kontrol ve baud rate değiştirme(115200)
+lrt oyun,arduino haber (sim)
+
+r.pi,nodemcu esp32,pic(mplab),ethernet,USB,sim,rfid,modbus,mqtt,RTOS,74hc595,alıcı verici led.
+STM32 Diğer Bölümler
+
+ETHERNET,USB,Power,Watchdog,DCMI(Digital Camera Interface),SDIO,FSMC
+
+En Son :DMA2D,CRYPRTC,LTDC(LCD-TFT),SAI(Serial Audio Interface),Flash,CAN
+
+ssh pi@(ip adresi)  192.168.1.25
+sudo nano /etc/dhcpcd.conf
+interface eth0                        #Network INTERFACE eth0 or wlan0
+static ip_address=RaspberryPi-IP/24   #IP ADDRESS OF PI
+static routers=ROUTER-Gateway         #IP OF THE GATEWAY NETWORK
+static domain_name_servers=DNS-IP     #DNS IP ADDRESS  8.8.8.8 8.8.4.4 ya da gateway adresi
+
+passwd ==>Sifre degistirmek icin(ilker250)
+
+/RpiUygulamalar $ source Penv/bin/activate
+
+nano ilkUyg.py diyerek kodu yaz
+python ilkUyg.py diyerek çalıştır
+cat ilkUyg.py diyerek o dosyaya gideriz
+sudo pigpiod
+sudo shutdown now
+
+*******************************************************************
+
+In NEC Protocol, a logic 0 is indicated by 562.5µs pulse burst followed by a 562.5µs space, with a total transmit time of 1.125ms and a logic 1 by 562.5µs pulse burst followed by a 1.6875ms space, with a total transmit time of 2.25ms.
+Whenever a key is pressed, the following is transmitted:-
+1. A 9 ms leading pulse
+2. A 4.5 ms space
+3. The 8-bit address
+4. The 8-bit logical inverse of the address
+5. The 8-bit command
+6. The 8-bit logical inverse of the command
+7. Finally a 562.5µs pulse burst to show end of message transmission
+
+**********************************************************************
+
+https://www.youtube.com/watch?v=AelNsnpfbcM
+
+*****************************
+
+HC05 HC06 KONTROL ET.
+OV7670 KONTROL ET.
+UDEMY STM32 MALZEME KONTROLÜ.
+ARDUİNO HABER VE LRT MALZEME .
+SİM HATTI AL.
+usb type c,otg kablo?audio jack
+waveplayer ve mouse keyboard haberleşmesi.
+
+usb ,Type-C Otg Kablo - USB Dönüştürücü Çevirici,kulaklık jack.
+

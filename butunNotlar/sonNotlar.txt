@@ -1,0 +1,585 @@
+
+INPUT  4x24 VOLT input(x-y ekseni)
+INPUT  4x5  VOLT input(Z Ekseni)
+INPUT  1x1  Acil Stop
+OUTPUT 12 tane ZX  --  6 tane Z  (4 Tane jumperla.)
+
+
+13 PUL +    ,      12    DIR  + ,   11 EN
+********************************************************************
+
+client = mqtt.connect({
+        host: 'www.example.com',
+        port: 1883,
+        username: 'username',
+        password: 'password'
+    });
+
+
+var client = mqtt.connect({servers : [{ host: host, port: port}], username : username, password :pass})
+
+
+var client  = mqtt.connect('mqtt://broker.mqttdashboard.com',{
+  username: 'myuser',
+  password: 'mypassword'
+});
+*******************************************************************************************************************
+
++CMGL: 17   +CMGL: String(index) >-1
+
+
+
+GPZDA,141644.00,22,03,2002,00,00
+47 - 50 -5A-44-41-2C-31-34-31-36-34-34-2E-30-30-2C-32-32-
+2C-30-33-2C-32-30-30-32-2C-30-30-2C-30-30
+
+
+
+Latitude 47 Degrees, 17.112671 Minutes
+Longitude 8 Degrees, 33.914843 Minutes
+or
+Latitude 47 Degrees, 17 Minutes, 6.76026 Seconds
+Longitude 8 Degrees, 33 Minutes, 54.89058 Seconds
+or
+Latitude 47.28521118 Degrees
+Longitude 8.56524738 Degrees
+*****************************************************************
+
+
+#if CONFIG_FREERTOS_UNICORE
+  static const BaseType_t app_cpu = 0;
+#else
+  static const BaseType_t app_cpu = 1;
+#endif
+
+
+static const TickType_t dim_delay = 5000 / portTICK_PERIOD_MS;
+
+static const int led_pin = 25;
+
+static TimerHandle_t one_shot_timer = NULL;
+
+
+void autoDimmerCallback(TimerHandle_t xTimer) {
+  digitalWrite(led_pin, LOW);
+}
+
+
+void doCLI(void *parameters) {
+
+  char c;
+
+  pinMode(led_pin, OUTPUT);
+
+  while (1) {
+
+    
+    if (Serial.available() > 0) {
+
+      
+      c = Serial.read();
+      Serial.print(c);
+
+     
+      digitalWrite(led_pin, HIGH);
+
+      
+      xTimerStart(one_shot_timer, portMAX_DELAY);
+    }
+  }
+}
+
+
+void setup() {
+
+  // Configure Serial
+  Serial.begin(115200);
+
+  // Wait a moment to start (so we don't miss Serial output)
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
+  Serial.println();
+  Serial.println("---FreeRTOS Timer Solution---");
+
+  // Create a one-shot timer
+  one_shot_timer = xTimerCreate(
+                      "One-shot timer",     // Name of timer
+                      dim_delay,            // Period of timer (in ticks)
+                      pdFALSE,              // Auto-reload
+                      (void *)0,            // Timer ID
+                      autoDimmerCallback);  // Callback function
+
+  // Start command line interface (CLI) task
+  xTaskCreatePinnedToCore(doCLI,
+                          "Do CLI",
+                          1024,
+                          NULL,
+                          1,
+                          NULL,
+                          app_cpu);
+
+  // Delete "setup and loop" task
+  vTaskDelete(NULL);
+}
+
+void loop() {
+  // Execution should never get here
+}
+
+***********************************************************************
+
+
+$GPRMC,123128.00,A,4042.98491,N,02947.98496,E,0.600,,220821,,,A*7B
+$GPVTG,,T,,M,0.600,N,1.112,K,A*26
+$GPGGA,123128.00,4042.98491,N,02947.98496,E,1,06,1.69,73.6,M,38.1,M,,*6A
+$GPGSA,A,3,01,32,08,21,31,04,,,,,,,2.31,1.69,1.57*02
+$GPGSV,3,1,11,01,80,303,20,03,52,297,20,04,27,218,17,08,13,194,17*76
+$GPGSV,3,2,11,17,23,309,18,19,07,327,15,21,75,165,29,22,70,330,21*7D
+$GPGSV,3,3,11,31,33,101,35,32,21,047,23,39,43,187,32*4F
+$GPGLL,4042.98491,N,02947.98496,E,123128.00,A,A*6F
+
+$GPGGA,123128.00,4042.98491,N,02947.98496,E,1,06,1.69,73.6,M,38.1,M,,*6A
+
+veri 0 saat:123128.00
+veri 1 enlem:4042.98491
+veri 2 yön:N
+veri 3 boylam:02947.98496
+veri 4 yön:E
+veri 5 fix_durum:1
+veri 6 uydu sayisi:06
+veri 7 ?  :1.69
+veri 8 deniz seviyesinden yükseklik (metre):73.6
+veri 9 main_sea_level:M
+
+Haritada 40 42.98491,029 47.98496
+
+**********************************************************************************************
+
+
+#define SERIAL_5N1 0x8000010
+#define SERIAL_6N1 0x8000014
+#define SERIAL_7N1 0x8000018
+#define SERIAL_8N1 0x800001c
+#define SERIAL_5N2 0x8000030
+#define SERIAL_6N2 0x8000034
+#define SERIAL_7N2 0x8000038
+#define SERIAL_8N2 0x800003c
+#define SERIAL_5E1 0x8000012
+#define SERIAL_6E1 0x8000016
+#define SERIAL_7E1 0x800001a
+#define SERIAL_8E1 0x800001e
+#define SERIAL_5E2 0x8000032
+#define SERIAL_6E2 0x8000036
+#define SERIAL_7E2 0x800003a
+#define SERIAL_8E2 0x800003e
+#define SERIAL_5O1 0x8000013
+#define SERIAL_6O1 0x8000017
+#define SERIAL_7O1 0x800001b
+#define SERIAL_8O1 0x800001f
+#define SERIAL_5O2 0x8000033
+#define SERIAL_6O2 0x8000037
+#define SERIAL_7O2 0x800003b
+#define SERIAL_8O2 0x800003f
+****************************************************************************************
+
+import serial                   # PySerial Kütüphanesi, seri portu kulllanabilmek için
+import serial.tools.list_ports  # Bağlı portların tespiti için
+from time import *              # Zamanla ilgili kütüphane
+import sys                      # Sistem komutlarının çalıştırılabilmesi için
+
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QTableWidgetItem                # Tasarladığımız arayüzün kullanılabilmesi için
+
+from Arduino_anapen import *
+
+## ARAYÜZ TANIMLANIP EKRANA GETİRİLİYOR 
+
+app = QtWidgets.QApplication(sys.argv)
+MainWindow = QtWidgets.QMainWindow()
+
+ui = Ui_anapencere() # class ismi
+
+ui.setupUi(MainWindow)
+MainWindow.show()
+
+
+## CSS İLE FORMAT VE BİÇİM TANIMLAMALARI YAPILIYOR 
+
+sicak = """
+QProgressBar {
+     border: 2px solid;
+	 border-color: gray;
+     border-radius: 5px;
+     background-color: rgb(255, 255, 255);	
+ }
+ QProgressBar::chunk {
+     background-color: rgb(255, 0, 0);  
+ }
+"""
+
+soguk = """
+QProgressBar {
+     border: 2px solid;
+	 border-color: gray;
+     border-radius: 5px;
+     background-color: rgb(255, 255, 255);	
+ }
+ QProgressBar::chunk {
+     background-color: rgb(0, 0, 255);   
+ }
+"""
+
+## FONKSİYONLAR TANIMLANIYOR 
+
+## ZAMANLAYICILAR OLUŞTURULUYOR 
+
+def zaman_yaz():
+    
+    global zaman
+    zaman = ctime() # Mon Dec 10 00:25:14 2018
+    ui.label_7.setText(zaman[10:19])
+
+
+timer0 = QtCore.QTimer()
+timer0.start(1000)
+timer0.timeout.connect(zaman_yaz)
+
+## PORT AÇILIYOR
+
+def port_ac():
+    
+    port = str(ui.port.currentText())
+    
+    baud = str(ui.baudrate.currentText())
+    
+    global ser
+    
+    try:
+        
+        ser = serial.Serial(port, baudrate=baud, timeout=0)
+        
+        if ser.is_open:
+            ui.statusbar.showMessage(" "*1 + " Port açıldı...", 1500)
+        
+            global timer1    
+            timer1 = QtCore.QTimer()
+            timer1.start(1000)
+            timer1.timeout.connect(sensoroku)
+
+    except:
+        
+        ui.statusbar.showMessage(" "*1 + " Port açılamadı !!! Lütfen sensörün bağlı olduğu portu seçiniz !!!", 1500)
+    
+
+
+
+
+      
+def port_kapat():
+    
+    try:
+        
+        global ser
+        
+        # port = str(ui.port.currentText())
+        # baud = str(ui.baudrate.currentText())
+        # ser = serial.Serial(port, baudrate=baud, timeout=0)
+        
+        timer1.stop()
+        
+        if ser.is_open:
+           
+            ser.close()
+            
+            print("Port kapatıldı...")
+            
+            ui.label_5.setText("")
+            ui.label_6.setText("")
+            
+            ui.progressBar_1.setValue(10)
+            ui.progressBar_2.setValue(10)
+            
+            # ui.statusbar.showMessage(" "*1 + " Port kapatıldı...", 1500)
+    
+
+    except:
+        
+        ui.statusbar.showMessage(" "*1 + "Açık port bulunamadı...", 1500)
+        
+
+
+
+
+    
+def sensoroku():
+    
+    global ser
+    
+    print ("Bekleyen byte sayısı :", ser.in_waiting)
+    
+    data = ser.read(14)   # Seri Porttan 14 bytelık veri okunuyor
+    
+    print(data)
+    print("\n")
+    
+    veri = str(data)
+    
+    if len(veri) > 3: # b'' değilse...
+        print(zaman[11:19], " Isı: ", veri[10:15]," Nem: ", veri[2:7])
+        
+        derece = float(veri[10:15])
+#        derece = -35.00
+        nem = float(veri[2:7])
+         
+        ui.label_5.setText(veri[10:15])
+#        ui.label_5.setText(str(derece))
+        ui.label_6.setText(veri[2:7])
+        
+        global sicak, soguk
+        
+        if derece > 0:
+            ui.progressBar_1.setStyleSheet(sicak)
+        
+        else:
+            ui.progressBar_1.setStyleSheet(soguk)
+    
+        ui.progressBar_1.setValue(abs(derece))
+        ui.progressBar_2.setValue(nem)
+
+
+
+
+        
+def cikis():
+    
+    port_kapat()
+    sys.exit(app.exec_())
+    
+
+
+
+
+ui.portac.clicked.connect(port_ac)
+ui.portkapat.clicked.connect(port_kapat)
+# ui.pb_cikis.clicked.connect(cikis)
+
+
+# İŞLETİM SİSTEMİNE ÇIKIŞ
+sys.exit(app.exec_())
+
+
+http://asac.ml/kayit.php?&table=veriler&angInp0=0&angInp1=0&angInp2=0&angInp3=0&angInp4=0&angInp5=0&angInp6=0&angInp7=0&modbus0=0&modbus1=0&modbus2=0&modbus3=0&modbus4=0&modbus5=0&modbus6=0&modbus7=0&modbus8=0&modbus9=0&modbus10=0&modbus11=0&modbus12=0&modbus13=0&modbus14=0&modbus15=0
+
+
+
+
+
+mibac.ml
+
+
+<div class="infobox" id="infobox">
+    <p id="in">Mirdev Otomasyon</p>
+    <p id="yaz">yazi</p>
+ 
+</div>
+
+
+
+<button onclick="myFunction()">Click me</button>
+<button onclick="myFunction2()">Click me2</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+    document.getElementById("in").innerHTML = "Hello World";
+    
+    var x = document.getElementById("infobox").childElementCount;
+    if(x==2)
+    {
+    
+    var yeniElement=document.createElement("img");
+    var nereye=document.getElementById("infobox");
+    yeniElement.id="resim";
+    yeniElement.src="img_girl.jpg";
+    yeniElement.width="100";
+    yeniElement.height="100";
+    nereye.insertBefore(yeniElement, nereye.children[0]);
+    //nereye.appendChild(yeniElement);
+    }
+ 
+}
+
+function myFunction2() {
+    document.getElementById("in").innerHTML = "Mirdev Otomasyon";
+    var x = document.getElementById("infobox").childElementCount;
+    if(x==3)
+    {
+    var nereden=document.getElementById("infobox");
+    nereden.removeChild(nereden.children[0]);
+    }
+    
+    
+ 
+}
+</script>
+
+
+
+**************************************************************************************
+
+
+<!DOCTYPE html>
+<html>
+<body>
+
+
+
+<!--<video width="320" height="240"  src="movie.mp4"  muted autoplay controls ></video>-->
+
+
+<div class="infobox" id="infobox">
+    <p id="in">Mirdev Otomasyon</p>
+    <p id="yaz">yazi</p>
+ 
+</div>
+
+
+
+<button onclick="myFunction()">Click me</button>
+<button onclick="myFunction2()">Click me2</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+    document.getElementById("in").innerHTML = "Hello World";
+    
+    var x = document.getElementsByClassName("infobox")[0].childElementCount;
+  
+    if(x==2)
+    {
+    
+    var yeniElement=document.createElement("video");
+    var nereye=document.getElementById("infobox");
+    
+    yeniElement.autoplay=true;
+    yeniElement.controls=true;
+    //yeniElement.muted=true;
+    yeniElement.src="movie.mp4";
+    yeniElement.width="320";
+    yeniElement.height="240";
+    nereye.insertBefore(yeniElement, nereye.children[0]);
+   
+    }
+ 
+}
+
+function myFunction2() {
+    document.getElementById("in").innerHTML = "Mirdev Otomasyon";
+    var x = document.getElementById("infobox").childElementCount;
+    if(x==3)
+    {
+    var nereden=document.getElementById("infobox");
+    nereden.removeChild(nereden.children[0]);
+    }
+    
+    
+ 
+}
+</script>
+
+
+
+
+</body>
+</html>
+
+
+
+
+        try:
+            self.client = ModbusSerialClient(method="rtu", port="COM16", stopbits=2, bytesize=8, parity='N',baudrate=9600)  # Programda slave ve baudrate ayarla.Defaultta
+            self.client.connect() # Sol/sag
+
+            self.client2 = ModbusSerialClient(method="rtu", port="COM17", stopbits=2, bytesize=8, parity='N',baudrate=9600)  # Programda slave ve baudrate ayarla.Defaultta
+            print("self.client2 connect oncesi")
+            self.client2.connect()  # (yukari/asagi)
+
+
+
+            self.ser = serial.Serial(port="COM20", baudrate=9600, timeout=0)  #Python-ESP haberlesmesi
+            
+
+            if  self.ser.is_open:
+                   print("Python-ESP port acik!!...")
+            else:
+                print("esp acik degil")
+
+            print("Baslangic kosulu oncesi")
+            self.baslangicKosulu(self.client,75)  #Tork Ayari
+            #self.baslangicKosulu(self.client2,75) #Tork Ayari
+
+
+        except:
+            print("Baslangic Hatasi")
+            # self.client.close()
+
+********************************************
+
+
+Resize PENCERE GENISLIK: 1920
+Resize PENCERE BOY: 1080
+Resize FOTO GENISLIK: 960
+Resize FOTO YUKSEKLIK: 648
+
+****************************************
+P1 -01 =0101       ==0001  ==YONSUZ HALİ
+P1-01  =0000
+
+*********************
+
+P2-10 =0001
+P2-11 =0104
+P2-12 =0116
+P2-13 =0117
+P2-14 =0102
+P2-15 =0123
+P2-16 =0122
+P2-17 =0000
+
+
+9.31 x 10 -6 
+0.931
+
+0,00000931
+
+400 
+
+1 devirdeki pulse
+
+
+*********************************
+
+Monitör ekranı params
+10.0
+75
+50
+628
+100
+16
+100
+
+**********************************
+
+1.Düzenleme
+2.Kamera ile hareketi birleştir.
+3.Artılı görüntüde butona tıklayarak merkez noktanın(belli bir noktanın) x ve y sini kaydet.Sonra o noktaya gittiğinde belli bir yarıçapta arat.Buton ile o noktaya gittiğinde fark çıkacaktır.O alanda daire aratma yap.
+
+********************************************************************
+
+P1-01  ==>  1
+PR Mod Ayarları
+Servodan Yükle
+DI3-DI2  ==>1  (-5000 için).
+DI4-DI2  ==>1  (5000 için).
+
+89.234.183.99:28961

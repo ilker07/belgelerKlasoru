@@ -1,0 +1,106 @@
+
+Adımlar
+1.git init ile branch oluşturulur.(Master branch)   
+2.Projedeki eklenmek isten dosyalar git add dosya_adi ile eklenir.
+3.git status ile durumları kontrol edilir.
+4.git commit -m "v1.1"  ==>İsim atandı.Master branchinde commitlenmiş v1.1 var.
+5.Yeni bir dosya ekleyip git add dosya_adi eklendikten sonra yeni bir commit yapilirsa v1.2 Master üzerinde 2 işlem var.
+6.git branch -l ==>Var olan brancler gösterilir.
+7.git branch branch_ismi ==>Yeni branch eklenir.
+8.git checkout branch_ismi ==>Branch değiştirilir.
+9.Brancler v1.1 ve ve1.2 den sonra oluşturulduğu için oluşturulan commitler diğer 2 branchten ulaşılabilir.
+10.git merge branch_ismi
+11.git branch -d branch_ismi  //Silmek için.
+12.Staging areaya dosya eklememk için .gitignore dosyası oluştur.İçine istenmeyen dosyayı yaz.(*.txt ==>txt olanlari ignore et.(!b.txt dersek b.txti dahil eder.) )
+13.git update-index --assume-unchanged dosya_ismi
+14.git diff (1.commit id si ) (2.commit id si )
+15.touch dosya_ismi (Dosya ekler)
+16.git restore --staged dosya_ismi //Değişiklikleri geri almak için.
+17.git checkout id //commite geri dönmek için.
+18.git stash //Sakladık commit edilmeyen değişikliği.git stash save "ismi"
+19 git stash list
+20.git stash apply idsi
+21.git cherry-pick commit_idsi //Bir branche diğer branchteki commiti kopyalama
+22.git remote add origin https://github.com/ilker07/yapilacaklar.git
+23.git pull origin master//githudan verileri çeker kendi lokalimize.
+24.git clone ....//githubtan proje klonlar.
+25.git tag tag_ismi commit_idsi
+26.git commit --amend -m "Commit ismi değiştirme"
+27.git push origin --force.
+
+
+
+
+press "i" (i for insert)
+write your merge message
+press "esc" (escape)
+write ":wq" (write & quit)
+then press enter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+git config --global user.name "ilker aykut"
+git config -- list
+pwd ==> Bulunduğumuz dizin.
+cd .. ==>Bir üst dizine gider.
+ls ==>Bulunduğumuz dizindeki dosyalar.
+cd Desktop ==>Masaüstüne gider.
+mkdir Klasoradi ==>Klasor olusturur.
+touch metin.txt==>Bulunduğumuz yere metin.txt dosyasını koyar.
+vi metin.txt ==>Dosyaya bir şeyler eklemek için.
+vi ile girdikten sonra bir şeyler yazabilmek için i tuşuna basılır.Sonra yazılmak istenen yazılır.Çıkmak için esc sonra :wq
+rm metin.txt ==>Dosyayı siler.
+rm -r Klasoradi ==>Klasörü siler.
+git init==>Klasörde git deposu oluşturur.
+git status ==>Duruma bakılır.
+git add yazi.txt ==>İşaretlemek için.
+git add . ==>Bütün dosyaları işaretler.
+git rm --cached yazi.txt ==>İşareti kaldirir.
+git commit -m "Buraya mesaj" 
+git log
+git log --oneline
+git reset id --hard
+git commit --amend -m "Duzenlendi"
+git branch dal1
+git checkout dal1 ==>Dal1 seçilir.
+git checkout -b  dal2 ==>Dal2 seçilir.
+git branch -d dal1==>silinir.(d ya D)
+git merge ozellik1==>Checkout sonucunda neredeyse oraya ozellik 1 i ekler.
+git push (Githubtan alınan link) master==>Mastera ekler.
+git remote add origin(Github linki)==>Takma isim verdik.
+git remote -v ==>Görüntüledik.
+subl dosyaAdi==>Sublime textte acar.
+git fetch origin
+git merge origin/master ==>Dosyaları çeker.
+git pull origin master
+git checkout --yazi.txt==>Değişiklikler gider.
+git diff ==>Değişiklikleri gösterir.
+
+
+
+
+
+ open-d kullan ama sadece en üst, en alt ve en altın bir üstü telleri değiştir. Sol notasını Fa#'a çekme yani.
+ ismi daTuner. Uygulama indikten sonra sol üst kısıma tıkla, guitarı seç, 6 strings de sonra open d seç.
+
+
+
+
+
+
+
+
+
+

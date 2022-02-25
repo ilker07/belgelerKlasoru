@@ -1,0 +1,24 @@
+
+Ders 105 den devam.
+
+Diff 0 ==> D+ (low) ,D- (high)   K
+Diff 1 ==> D+ (high) ,D- (low)   J
+
+Single Ended 0   ikisi de low
+Detached         ikisi de low
+Idle             diff1
+Reset            SE0>=10ms
+Suspend          Idle 3ms
+Resume           K 20ms and EOP.
+Sync or Start of Packet   K J K J K J KK 
+EOP             SE0 SE0 J
+
+
+End pointin yönü hosta göre olur.Örnek Data device ==>Host ise in end point  16tane in ve out var.
+
+İn Endpoint x ve Out Endpoint X farklı endpointlerdir.(0 hariç.)
+
+Datalarda önce least significant bit yollanır.
+
+
+Handshake packeti verinin başarılı olup olmadığını bildirir.
