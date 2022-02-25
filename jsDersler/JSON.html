@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+    
+    let obj,sendJSON;
+    obj={
+        "firstName":"ilker",
+        "lastName":"Aykut",
+        "info":{"hair":"Black","weight":50}
+    };
+
+    sendJSON=JSON.stringify(obj);
+    //JSON.parse()
+
+
+    obj["firstName"]="sda";
+    obj["info"]["hair"]="Brown";
+
+    let nesne;
+
+    nesne={
+
+      "kisiler":[
+
+      {"Ad":"ilker","Soyad":"Aykut"},
+      {"Ad":"ilker","Soyad":"Aykut"},
+      {"Ad":"ilker","Soyad":"Aykut"}
+
+
+      ]
+
+    };
+
+
+    let deger='{"Ad":"ilker","Soyad":"Aykut","DogumTarihi":"1993-11-28"}';
+    let donus;
+    donus=JSON.parse(deger,function(key,value){
+         
+
+        if(key==="DogumTarihi")
+        {
+        
+        return new Date(value);
+        }
+        else
+        {
+          
+            return value;
+        }
+       
+       
+    });
+
+    let x;
+    x=donus["DogumTarihi"].getFullYear();
+    alert(x);
+    
+
+
+   
+
+    </script>
+    
+</body>
+</html>

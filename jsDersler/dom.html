@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+    <div id="ParentDiv">
+        <h1 id="baslik">Diller</h1>
+
+        <p id="p1">JavaScript</p>
+        <p id="p2">Python</p>
+        <p id="p3">C</p>
+        <p id="p4">C++</p>
+        <p id="p5">Java</p>
+        
+    </div>
+    <button onclick="elementEkle()">Ekle</button>
+    <button onclick="SiralielementEkle()">Sirali Ekle</button>
+    <button onclick="Degistir()">Degistir</button>
+    <script>
+
+        var deger=document.querySelector('#baslik').firstChild.nodeValue;
+        //alert(deger);
+
+        var deger2=document.querySelector('#ParentDiv').childElementCount;
+        //alert(deger2);
+
+        var deger3=document.querySelector('#ParentDiv').nodeName;
+        //alert(deger3);
+
+        var deger4=document.querySelector('#ParentDiv').getAttributeNode('id').nodeName;
+        //alert(deger4);
+
+        var deger5=document.querySelector('#p5').parentNode.nodeName;
+        //alert(deger5);
+
+        var deger6=document.querySelector('#ParentDiv').children[2].textContent;
+        //alert(deger6);
+
+        var deger7=document.querySelector('#p1').children;
+        var toplam="";
+        var i=0;
+
+        for(;i<deger7.length;i++)
+        {
+          toplam += deger7[i].firstChild.nodeValue+"\n";
+
+        }
+
+       // alert(toplam);
+
+       var deger8=document.querySelector('#p5').childNodes[0].nodeValue;
+       
+       //alert(deger8);
+
+       var deger9=document.querySelector('#p1').nextElementSibling.firstChild.nodeValue;
+       //alert(deger9);
+     function elementEkle()
+     {
+        var pElementi=document.createElement("p");
+        var element=document.querySelector('#ParentDiv');
+        var text=document.createTextNode("C#");
+        pElementi.appendChild(text);
+        element.appendChild(pElementi);
+     }
+     function SiralielementEkle()
+     {
+
+        
+        var pElementi=document.createElement("p");
+        var element=document.querySelector('#ParentDiv');
+        var p2=document.querySelector('#p2');
+
+
+        var text=document.createTextNode("stm32");
+        pElementi.appendChild(text);
+
+
+        element.insertBefore(pElementi,p2);
+     }
+
+     function Degistir()
+     {
+        var pElementi=document.createElement("p");
+        var text=document.createTextNode("Arduino");
+        pElementi.appendChild(text);
+
+        var parent=document.querySelector('#ParentDiv');
+        var degisecek=document.querySelector('#p1');
+        parent.replaceChild(pElementi,degisecek);
+
+
+     }
+     //this.value=this.value.substr(0,150);
+
+        /*
+    var deger=document.querySelectorAll('.color')//clor class olanı çeker.
+    var deger2=document.querySelectorAll('span.color')//span içinde clor class olanı çeker.
+    var deger3=document.querySelectorAll('[name]')//clor class olanı ç
+    var deger4=document.querySelectorAll('[name]')//clor class olanı ç
+
+    btn.onclick=function(){
+
+
+    }
+    */
+    </script>
+    
+</body>
+</html>

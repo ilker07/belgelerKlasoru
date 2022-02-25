@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+   <p id="sonuc">Yazi</p>
+
+   <script>
+    
+
+    /*  XML i text halinden aldi.
+    var xmlParser;
+     
+     var yazi="<kitaplar>"+
+    "<kitap>"+
+    "<title dil='tr'>Kitap1</title>"+
+    "<yazar >Yazar1</yazar>"+
+    "<yil>2020</yil>"+
+    "</kitap>"+
+    "<kitap>"+
+    "<title dil='tr'>Kitap2</title>"+
+    "<yazar >Yazar2</yazar>"+
+    "<yil>2021</yil>"+
+    "</kitap>"+
+    "</kitaplar>"; 
+   xmlParser=new DOMParser();
+   var xmlToTxt=xmlParser.parseFromString(yazi,"text/xml");
+   document.querySelector('#sonuc').innerHTML=xmlToTxt.getElementsByTagName("yazar")[0].childNodes[0].nodeValue;
+   alert(xmlToTxt);
+   */
+
+
+   /*XML dosyasindan gönderme*/
+
+   function xmldosyasindanAl()
+   {
+   
+    var xhttp = new XMLHttpRequest();
+     xhttp.onreadystatechange = function() {
+        
+    if (this.readyState == 4 && this.status == 200) {
+        isle(this);
+    }
+   
+    };
+        xhttp.open("GET", "ders.xml", true);
+        xhttp.send();
+
+   }
+
+   function isle(veri)
+   {
+    alert("dasdadssad");
+       var  xmlBelgesi=0,x=0,i,txt;
+       txt="";
+       xmlBelgesi=veri.responseXML;
+       x=xmlBelgesi.getElementsByTagName("yazar");
+       //alert(x);
+       alert("dsad");
+       for(i=0;i<x.length;i++)
+       {
+        txt +=x[i].childNodes[0].nodeValue+"<br>";
+       }
+      
+       alert(txt);
+
+   }
+
+   xmldosyasindanAl();
+   </script>
+
+
+
+</body>
+</html>

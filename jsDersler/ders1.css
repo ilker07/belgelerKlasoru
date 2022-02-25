@@ -1,0 +1,116 @@
+table,th,td{
+
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+h1{
+
+    display: inline;   
+}
+#hbir{
+
+    color:rgba(255, 122, 30, 0.2);
+}
+
+
+#idBir,.class1  /*idsin idBir veya classı class1*/
+{
+
+
+    color: yellow;
+}
+
+#idiki.class2  /*idsin idiki ve classı class2*/
+{
+
+
+    color: yellow;
+    margin-left: auto; /*Oto ayarlama*/
+    margin-right: auto; /*Oto ayarlama*/
+    box-sizing: border-box;
+    font-style: italic;
+    font-weight: bold;
+   
+    /*Margin bloklar arası mesafe padding içteki*/
+    
+}
+
+.box-1
+{
+
+    background-image: url("image.png");
+    background-size: cover; /*resmi oturtur.*/
+    background-repeat: no-repeat;
+    width:25%;
+    text-transform: capitalize;/*İlk harfi büyük yapar.*/
+}
+
+h1{
+
+
+    text-align: center;
+    background-color: blueviolet;
+    letter-spacing: 25px; /*Harfler arası mesafe*/
+    text-decoration: underline;/*line-through üzerini çizer.*/
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 16px;/*linelar arası mesafe*/
+}
+h1:hover{  /*linkleri tıklanmadan*/
+  
+    color:brown;
+}
+
+a:visited{  /*linkleri tıkladıktan sonra*/
+
+    color:chartreuse;
+}
+
+a:active{  /*linklere tıklarken*/
+    color: cornflowerblue;
+}
+
+.para1::after{
+
+    content: "Paragraf sonrası";/*Paragraftan sonra bu yazıyı yazar.*/
+    content: url("Yolu");
+}
+p:nth-child(1)  /*1.çocuk*/
+{
+color:darkblue
+
+}
+p:nth-child(even)  /*çift nolu çocuklar*/
+{
+color:darkblue
+
+}
+
+div{
+
+    overflow: auto;/*Bloktaki yazılar taştığında auto scroll çıkarır.*/
+    position: fixed;/*Sayfadaki yeri sabit.*/
+    position: relative; /*Bulunudğu yerden*/
+    left: 10 px;
+    z-index: 1;
+}
+
+/*position:absolute  iç sınıfın mesafesi*/
+
+
+input[type="email"]:invalid{
+
+    border: 2px solid red;
+}
+
+li a :hover:not(.active)
+{
+
+    color: white;
+}
+
+button[type="button"]
+{
+
+    cursor: pointer; 
+}
