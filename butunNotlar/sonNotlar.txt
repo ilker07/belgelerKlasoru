@@ -1,4 +1,18 @@
 
+//tiny gsm TinyGsmCommon.h
+/*
+#ifndef TINY_GSM_YIELD_MS
+#define TINY_GSM_YIELD_MS 1    //0 di...!!!!!!!!
+#endif
+
+#ifndef TINY_GSM_YIELD
+#define TINY_GSM_YIELD() \
+  { vTaskDelay(pdMS_TO_TICKS(TINY_GSM_YIELD_MS));}  //delay(TINY_GSM_YIELD_MS);
+#endif
+
+*/
+
+
 INPUT  4x24 VOLT input(x-y ekseni)
 INPUT  4x5  VOLT input(Z Ekseni)
 INPUT  1x1  Acil Stop
